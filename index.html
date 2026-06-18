@@ -250,9 +250,6 @@
         <button onclick="switchTab('vendors')" id="tab-vendors" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
             📍 Vendor / 优质商家
         </button>
-        <button onclick="switchTab('inspiration')" id="tab-inspiration" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
-            📷 灵感风格板
-        </button>
         <button onclick="switchTab('guests')" id="tab-guests" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
             👥 宾客管理 & 桌席
         </button>
@@ -520,23 +517,7 @@
         </div>
     </div>
 
-    <!-- SECTION: PINTEREST STYLE MOODBOARD -->
-    <div id="content-inspiration" class="tab-content hidden animate-fade">
-        <div class="bg-white rounded-2xl p-6 elegant-shadow border border-burgundy-50 mb-8">
-            <h2 class="text-xl font-bold font-serif text-burgundy-500 mb-2">📷 Pinterest 级婚礼风格灵感橱窗</h2>
-            <p class="text-xs text-gray-400 mb-6">分类收藏优秀现场参考图片，与花艺、道具商和跟妆老师沟通时，一秒同频。</p>
-
-            <div class="flex gap-2 mb-6 border-b border-gray-100 pb-3 overflow-x-auto">
-                <button onclick="filterInspiration('all')" class="bg-burgundy-500 text-white px-3 py-1 rounded-full text-xs font-semibold">全部灵感</button>
-                <button onclick="filterInspiration('forest')" class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200">🌳 森系草坪</button>
-                <button onclick="filterInspiration('korean')" class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200">💍 韩式简约</button>
-                <button onclick="filterInspiration('traditional')" class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs hover:bg-gray-200">🏮 复古中式</button>
-            </div>
-
-            <div id="inspiration-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-        </div>
-    </div>
-
+  
     <!-- SECTION: GUEST BOOK & LINKED 10 SEATS VISUALIZER -->
     <div id="content-guests" class="tab-content hidden animate-fade">
         <div class="bg-[#faf3eb] rounded-2xl p-6 mb-6 border border-champagne-100 print-card flex flex-wrap justify-between items-center gap-4">

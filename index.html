@@ -2609,6 +2609,19 @@
         });
         newCancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
     }
+    // 自动检测 ?view=guest 参数
+function checkGuestMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('view') === 'guest') {
+        // 隐藏所有管理类内容
+        const adminElements = document.querySelectorAll('.no-print, #content-todo, #content-budget, #content-ai-assistant, #content-contacts');
+        adminElements.forEach(el => el.classList.add('hidden'));
+        // 自动切换到电子请柬页
+        switchTab('tools');
+    }
+}
+// 在 window.onload 的最末尾调用它
+checkGuestMode();
 </script>
 </body>
 </html>

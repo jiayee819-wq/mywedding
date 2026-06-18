@@ -2609,18 +2609,32 @@
         });
         newCancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
     }
-    // 自动检测 ?view=guest 参数
+   // 在 <script> 标签的最底部（或者紧接着 window.onload 后面）添加这段代码：
+
 function checkGuestMode() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('view') === 'guest') {
-        // 隐藏所有管理类内容
-        const adminElements = document.querySelectorAll('.no-print, #content-todo, #content-budget, #content-ai-assistant, #content-contacts');
-        adminElements.forEach(el => el.classList.add('hidden'));
-        // 自动切换到电子请柬页
+        // 1. 隐藏顶部的导航按钮条
+        const tabNav = document.querySelector('.tab-btn-group');
+        if (tabNav) tabNav.classList.add('hidden');
+        
+        // 2. 隐藏所有管理类内容
+        const adminSections = [
+            'content-morning', 'content-afternoon', 'content-evening',
+            'content-todo', 'content-budget', 'content-vendors', 
+            'content-inspiration', 'content-guests', 'content-checklist', 'content-ai-assistant'
+        ];
+        adminSections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        });
+        
+        // 3. 自动跳转到请柬页面
         switchTab('tools');
     }
 }
-// 在 window.onload 的最末尾调用它
+
+// 确保在页面加载完之后自动运行一次检测
 checkGuestMode();
 </script>
 </body>

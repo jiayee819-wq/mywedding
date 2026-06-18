@@ -41,25 +41,7 @@
     </script>
     
     <style>
-        body 
-        <div id="guest-page" class="hidden min-h-screen flex flex-col items-center justify-center p-6 text-center bg-rose-50">
-    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-sm w-full border border-rose-100">
-        <h1 class="text-3xl font-serif text-rose-600 mb-8">我们的婚礼</h1>
-        <div class="space-y-6 text-left border-t border-rose-50 pt-6 text-gray-800">
-            <div>
-                <p class="text-xs text-gray-400 uppercase tracking-widest">日期 (Date)</p>
-                <p class="text-lg font-semibold">2026年 10月 20日</p>
-            </div>
-            <div>
-                <p class="text-xs text-gray-400 uppercase tracking-widest">地点 (Venue)</p>
-                <p class="text-lg font-semibold">云端大酒店 宴会厅</p>
-            </div>
-        </div>
-        <button class="mt-10 w-full bg-rose-500 text-white py-3 rounded-xl font-bold">确认出席</button>
-    </div>
-</div>
-        
-        {
+        body {
             font-family: 'Plus Jakarta Sans', 'Noto Serif SC', sans-serif;
             background-color: #faf8f5;
         }
@@ -268,7 +250,9 @@
         <button onclick="switchTab('vendors')" id="tab-vendors" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
             📍 Vendor / 优质商家
         </button>
-    
+        <button onclick="switchTab('inspiration')" id="tab-inspiration" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
+            📷 灵感风格板
+        </button>
         <button onclick="switchTab('guests')" id="tab-guests" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">
             👥 宾客管理 & 桌席
         </button>
@@ -2625,19 +2609,6 @@
         });
         newCancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
     }
- <script>
-// 简单的 Guest 模式逻辑
-function checkGuestMode() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('view') === 'guest') {
-        // 隐藏你原本所有的页面内容 (假设你原本的内容都在一个大div里，给那个div加个id="main-content")
-        // 如果没有id，可以直接隐藏 body 下的所有子元素，或者简单把 body 背景换成红色
-        document.body.innerHTML = document.getElementById('guest-page').outerHTML;
-        document.body.classList.remove('hidden');
-    }
-}
-window.onload = checkGuestMode;
-</script>
 </script>
 </body>
 </html>

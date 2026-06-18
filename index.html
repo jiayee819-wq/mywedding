@@ -753,42 +753,47 @@
         </div>
     </div>
 
-     <!-- 宾客视角页面 -->
-    <div id="guest-page" class="hidden min-h-screen bg-rose-50 p-6 flex flex-col items-center z-[200] fixed inset-0 overflow-y-auto">
-        <div class="w-full max-w-sm bg-white p-8 rounded-2xl shadow-lg text-center">
-            <h1 class="text-2xl font-bold mb-6 font-serif text-burgundy-500">诚邀您的出席</h1>
+     <!-- 宾客视角页面：还原图片设计风格 -->
+    <div id="guest-page" class="hidden min-h-screen fixed inset-0 z-[9999] bg-[#fdfaf8] overflow-y-auto items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white rounded-[2rem] card-shadow overflow-hidden border border-gray-100">
+            <!-- 头部大图 -->
+            <div class="h-80 w-full relative">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="婚纱照">
+            </div>
             
-            <form id="rsvp-form" class="text-left space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">您的姓名</label>
-                    <input type="text" required class="w-full border-gray-300 rounded-lg border p-2.5 focus:ring-burgundy-500 focus:border-burgundy-500">
+            <!-- 请柬内容 -->
+            <div class="p-8 text-center">
+                <h1 class="font-serif text-3xl text-gray-800 mb-2">The Wedding</h1>
+                <p class="text-gray-400 text-xs tracking-[0.3em] uppercase mb-8">Save The Date</p>
+                
+                <div class="space-y-6 text-gray-600">
+                    <div>
+                        <p class="text-[10px] text-gray-300 uppercase tracking-widest mb-1">Date</p>
+                        <p class="text-sm font-medium">2026年 10月 20日</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-300 uppercase tracking-widest mb-1">Location</p>
+                        <p class="text-sm font-medium">云端大酒店 宴会厅</p>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">出席人数</label>
-                    <input type="number" min="1" required class="w-full border-gray-300 rounded-lg border p-2.5 focus:ring-burgundy-500 focus:border-burgundy-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">给新人的祝福</label>
-                    <textarea rows="3" class="w-full border-gray-300 rounded-lg border p-2.5 focus:ring-burgundy-500 focus:border-burgundy-500"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-burgundy-500 text-white py-3 rounded-lg font-bold hover:bg-burgundy-600 transition shadow-md mt-2">提交祝福与回复</button>
-            </form>
+
+                <!-- 交互表单 -->
+                <form id="rsvp-form" class="mt-10 space-y-3">
+                    <input type="text" id="guest-name" required placeholder="您的姓名" class="w-full p-3 bg-gray-50 rounded-xl text-sm text-center focus:ring-1 focus:ring-gray-300 outline-none">
+                    <input type="number" id="guest-count" required placeholder="出席人数" class="w-full p-3 bg-gray-50 rounded-xl text-sm text-center focus:ring-1 focus:ring-gray-300 outline-none">
+                    <textarea id="guest-wish" placeholder="给新人的祝福" class="w-full p-3 bg-gray-50 rounded-xl text-sm text-center h-20 focus:ring-1 focus:ring-gray-300 outline-none"></textarea>
+                    <button type="submit" class="w-full mt-2 bg-gray-900 text-white py-3 rounded-xl text-sm font-bold tracking-wider hover:bg-gray-800 transition">发送祝福</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- 管理后台 (原有内容存放处) -->
+    <!-- 管理后台：原有代码保持不变 -->
     <div id="management-content">
-        <header class="bg-gradient-to-b from-[#800020]/10 to-transparent pt-12 pb-8 px-4 text-center no-print">
-            <div class="max-w-5xl mx-auto">
-                <h1 class="text-4xl md:text-6xl font-bold font-serif text-burgundy-500 mt-5 mb-2">我们结婚了</h1>
-                <p class="mt-4 text-gray-500">婚礼主控仪表盘</p>
-                <button onclick="window.location.search = '?view=guest'" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">跳转到宾客视角</button>
-            </div>
-        </header>
-
-        <main class="max-w-5xl mx-auto px-4 pb-20">
-            <!-- 原有后台功能模块 -->
-        </main>
+        <div class="p-10 text-center">
+            <h1 class="text-2xl font-bold">婚礼主控台</h1>
+            <button onclick="window.location.search = '?view=guest'" class="mt-4 bg-gray-800 text-white px-6 py-2 rounded-lg">预览请柬模式</button>
+        </div>
     </div>
 
 
@@ -2631,7 +2636,8 @@
     }
 </script>
   
-    <script>
+ <script>
+        // 路由切换逻辑
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const guestPage = document.getElementById('guest-page');
@@ -2641,22 +2647,15 @@
                 adminPage.classList.add('force-hidden');
                 guestPage.classList.remove('hidden');
                 guestPage.classList.add('force-show');
-            } else {
-                adminPage.classList.remove('hidden');
-                guestPage.classList.add('force-hidden');
             }
-
-            // 处理表单提交
-            document.getElementById('rsvp-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert('感谢您的祝福！我们已收到您的回复。');
-            });
         });
 
-        // 保持您原本的初始化逻辑
-        window.onload = function() {
-            // 原有函数调用
-        };
+        // 表单处理
+        document.getElementById('rsvp-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('guest-name').value;
+            alert(`感谢 ${name}，我们收到您的祝福啦！`);
+        });
     </script>
 </body>
 </html>

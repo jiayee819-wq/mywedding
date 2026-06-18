@@ -753,6 +753,19 @@
         </div>
     </div>
 
+    <!-- 宾客视角：请柬页面 -->
+<div id="guest-page" class="hidden min-h-screen bg-rose-50 fixed inset-0 z-[9999] overflow-y-auto">
+    <div class="max-w-md mx-auto p-6 text-center">
+        <!-- 婚纱照 -->
+        <div class="h-64 w-full bg-gray-200 rounded-2xl overflow-hidden mb-6 shadow-lg">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552" class="w-full h-full object-cover">
+        </div>
+        <h1 class="text-3xl font-bold mb-4">我们的婚礼</h1>
+        <p class="text-gray-600 mb-6">2026年 10月 20日 | 云端大酒店</p>
+        <button onclick="alert('感谢出席！')" class="w-full bg-rose-500 text-white py-3 rounded-xl font-bold hover:bg-rose-600 transition">确认出席</button>
+    </div>
+</div>
+
     <!-- ACT 7 CONTENT: AI Assistant Tab -->
     <div id="content-ai-assistant" class="tab-content hidden animate-fade">
         <div class="bg-gradient-to-r from-burgundy-50 to-champagne-100/30 rounded-2xl p-6 mb-8 border border-burgundy-100 print-card flex items-center gap-4">
@@ -2589,6 +2602,28 @@
             if (onConfirmCallback) onConfirmCallback();
         });
         newCancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+</script>
+    <script>
+    // 自动检测宾客模式
+    window.addEventListener('load', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('view') === 'guest') {
+            // 找到您原本的所有后台内容容器，请确保它的 id 是 management-content
+            // 如果您的后台没有包在一个大 div 里，请把您所有的后台代码用 <div id="management-content">...</div> 包裹起来
+            const admin = document.getElementById('management-content');
+            if (admin) admin.style.display = 'none'; 
+            
+            // 显示请柬
+            document.getElementById('guest-page').classList.remove('hidden');
+        }
+    });
+
+    // 给您的复制按钮用的函数
+    function shareGuestLink() {
+        const link = window.location.origin + window.location.pathname + "?view=guest";
+        navigator.clipboard.writeText(link);
+        alert("已复制！您可以直接发送给宾客。");
     }
 </script>
 </body>

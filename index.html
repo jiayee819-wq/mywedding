@@ -1579,273 +1579,286 @@ function loadAllFromLocalStorage(){
 }
 
 // ═══════════════════════════════════════
-// PRINT / PDF FUNCTIONS
+// PRINT / PDF — clean data-driven renderers
 // ═══════════════════════════════════════
 
-function printSeatingChart() {
-    const groom  = document.getElementById('groom-name')?.value  || '新郎';
-    const bride  = document.getElementById('bride-name')?.value  || '新娘';
-    const venue  = document.getElementById('invite-location-input')?.value || '';
-    const dateEl = document.getElementById('header-wedding-date');
-    const dateStr = dateEl ? dateEl.innerText : '';
+function _printMeta() {
+    return {
+        groom: document.getElementById('groom-name')?.value   || '新郎',
+        bride: document.getElementById('bride-name')?.value   || '新娘',
+        venue: document.getElementById('invite-location-input')?.value || '',
+        date:  document.getElementById('header-wedding-date')?.innerText || '',
+    };
+}
 
-    // Build table cards HTML
-    let tablesHtml = '';
-    seatingData.forEach((table, tIdx) => {
-        const seats = Array.from({length:10}, (_,i) => {
-            const name = table.guests[i] || '';
-            return `<tr>
-                <td style="padding:5px 8px;font-size:11px;color:#888;width:20px;font-family:monospace">${i+1}</td>
-                <td style="padding:5px 8px;font-size:12px;font-weight:${name?'600':'400'};color:${name?'#800020':'#ccc'};border-bottom:1px solid #f5f0eb">${name || '—'}</td>
-            </tr>`;
-        }).join('');
-
-        const filledCount = table.guests.filter(g => g && g.trim()).length;
-        const pct = Math.round(filledCount / 10 * 100);
-
-        // Mini circular seat diagram (SVG)
-        const angles = Array.from({length:10}, (_,i) => (i * 36 - 90) * Math.PI / 180);
-        const circleDots = angles.map((a, i) => {
-            const x = 40 + 28 * Math.cos(a);
-            const y = 40 + 28 * Math.sin(a);
-            const filled = table.guests[i] && table.guests[i].trim();
-            return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${filled ? '#800020' : '#e5e7eb'}" />`;
-        }).join('');
-
-        tablesHtml += `
-        <div style="background:#fff;border:1px solid #e8ddd0;border-radius:16px;padding:20px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;gap:12px">
-            <!-- Table header -->
-            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0e8df;padding-bottom:10px">
-                <div>
-                    <div style="font-size:10px;color:#b08b43;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px">Table ${tIdx+1}</div>
-                    <div style="font-size:13px;font-weight:700;color:#800020;font-family:serif">${table.name}</div>
-                </div>
-                <div style="text-align:center">
-                    <svg width="56" height="56" viewBox="0 0 80 80">
-                        <circle cx="40" cy="40" r="18" fill="#faf8f5" stroke="#e8ddd0" stroke-width="2"/>
-                        <text x="40" y="45" text-anchor="middle" font-size="11" fill="#800020" font-weight="700">${filledCount}/10</text>
-                        ${circleDots}
-                    </svg>
-                </div>
-            </div>
-            <!-- Seat list -->
-            <table style="width:100%;border-collapse:collapse">
-                <tbody>${seats}</tbody>
-            </table>
-            <!-- Capacity bar -->
-            <div>
-                <div style="height:4px;background:#f3ece5;border-radius:99px;overflow:hidden">
-                    <div style="height:100%;width:${pct}%;background:${pct>=100?'#22c55e':'#c5a059'};border-radius:99px"></div>
-                </div>
-                <div style="font-size:9px;color:#bbb;margin-top:3px;text-align:right">${filledCount} 已排 · ${10-filledCount} 空位</div>
-            </div>
-        </div>`;
-    });
-
-    const emptyState = seatingData.length === 0
-        ? `<div style="text-align:center;padding:60px;color:#ccc;font-size:14px">暂无桌席数据</div>`
-        : '';
-
-    const totalGuests = seatingData.reduce((s,t) => s + t.guests.filter(g=>g&&g.trim()).length, 0);
-
-    const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>婚礼座位表 · ${groom} &amp; ${bride}</title>
+function _openPrintWindow(title, bodyHtml, extraCss) {
+    const m = _printMeta();
+    const html = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<title>${title} · ${m.groom} &amp; ${m.bride}</title>
 <style>
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'PingFang SC','Microsoft YaHei',sans-serif; background:#fdfaf8; color:#222; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-  @page { size:A4; margin:15mm 12mm; }
-  @media print {
-    .no-print { display:none !important; }
-    body { background:white; }
-    .page-header { position:running(header); }
-  }
-  .page-header {
-    text-align:center;
-    padding:24px 0 18px;
-    border-bottom:2px solid #e8ddd0;
-    margin-bottom:24px;
-  }
-  .couple-names {
-    font-size:28px;
-    font-weight:700;
-    color:#800020;
-    font-family:serif;
-    letter-spacing:0.04em;
-  }
-  .wedding-meta {
-    font-size:11px;
-    color:#b08b43;
-    margin-top:6px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-  }
-  .summary-bar {
-    display:flex;
-    gap:16px;
-    justify-content:center;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-  }
-  .summary-chip {
-    background:#faf3eb;
-    border:1px solid #e8ddd0;
-    border-radius:99px;
-    padding:5px 16px;
-    font-size:11px;
-    color:#800020;
-    font-weight:600;
-  }
-  .tables-grid {
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
-  }
-  .print-btn {
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:#800020;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    padding:8px 18px;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-    margin-bottom:16px;
-    letter-spacing:0.05em;
-  }
-  .print-btn:hover { background:#66001a; }
-  .footer-note {
-    text-align:center;
-    font-size:9px;
-    color:#ccc;
-    margin-top:24px;
-    font-style:italic;
-  }
-</style>
-</head>
-<body>
-<div class="no-print" style="text-align:center;padding:12px 0">
-  <button class="print-btn" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#fff;color:#1a1a1a;font-size:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@page{size:A4 portrait;margin:14mm 12mm}
+@media print{.no-print{display:none!important}}
+.ph{text-align:center;padding-bottom:14px;border-bottom:1.5px solid #ddd;margin-bottom:20px}
+.ph .ey{font-size:9px;letter-spacing:.25em;color:#b08b43;text-transform:uppercase;margin-bottom:5px}
+.ph .nm{font-size:22px;font-weight:700;color:#800020;font-family:serif;letter-spacing:.03em}
+.ph .sb{font-size:10px;color:#999;margin-top:3px}
+.pb{display:inline-flex;align-items:center;gap:6px;background:#800020;color:#fff;border:none;border-radius:7px;padding:7px 20px;font-size:11px;font-weight:700;cursor:pointer}
+.pb:hover{background:#66001a}
+.ft{text-align:center;font-size:9px;color:#ccc;margin-top:22px;font-style:italic;border-top:1px solid #eee;padding-top:10px}
+${extraCss || ''}
+</style></head><body>
+<div class="no-print" style="text-align:center;padding:10px 0 14px">
+  <button class="pb" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
 </div>
-<div class="page-header">
-  <div style="font-size:10px;letter-spacing:0.3em;color:#b08b43;text-transform:uppercase;margin-bottom:6px">Wedding Seating Chart</div>
-  <div class="couple-names">${groom} &amp; ${bride}</div>
-  <div class="wedding-meta">${dateStr}${venue ? ' · ' + venue : ''}</div>
+<div class="ph">
+  <div class="ey">Wedding Planning · ${m.date}</div>
+  <div class="nm">${m.groom} &amp; ${m.bride}</div>
+  <div class="sb">${title}${m.venue ? ' · ' + m.venue : ''}</div>
 </div>
-<div class="summary-bar">
-  <div class="summary-chip">🪑 共 ${seatingData.length} 桌</div>
-  <div class="summary-chip">👥 已排 ${totalGuests} 位宾客</div>
-  <div class="summary-chip">💺 空位 ${seatingData.length*10 - totalGuests} 个</div>
-</div>
-${emptyState}
-<div class="tables-grid">${tablesHtml}</div>
-<div class="footer-note">"良辰吉日定终身，百年琴瑟共白头" · 婚礼数字座舱自动生成</div>
-</body>
-</html>`;
-
-    const w = window.open('', '_blank', 'width=900,height=700');
+${bodyHtml}
+<div class="ft">"良辰吉日定终身，百年琴瑟共白头" · 婚礼数字座舱</div>
+</body></html>`;
+    const w = window.open('', '_blank', 'width=860,height=720');
     w.document.write(html);
     w.document.close();
     w.focus();
 }
 
-// ── Generic section printer ────────────────────────────────────────────
-function printSection(sectionKey) {
-    const groom  = document.getElementById('groom-name')?.value  || '新郎';
-    const bride  = document.getElementById('bride-name')?.value  || '新娘';
-    const dateEl = document.getElementById('header-wedding-date');
-    const dateStr = dateEl ? dateEl.innerText : '';
+// ── SEATING CHART ─────────────────────────────────────────────────────
+function printSeatingChart() {
+    const totalGuests = seatingData.reduce((s,t) => s + t.guests.filter(g=>g&&g.trim()).length, 0);
 
-    const SECTION_TITLES = {
-        morning:   '第一幕：清晨喜庆接亲 Runsheet',
-        afternoon: '第二幕：傍晚首见外拍 Runsheet',
-        evening:   '第三幕：无伴电影感晚宴 Runsheet',
-        guests:    '宾客花名登账簿 Guest List',
-        checklist: '备婚核心倒计时清单 Checklist',
-        budget:    '婚礼预算开销明细 Budget',
+    let cards = '';
+    seatingData.forEach((table, idx) => {
+        const filled = table.guests.filter(g => g && g.trim()).length;
+        const pct    = Math.round(filled / 10 * 100);
+
+        // SVG round-table diagram
+        const dots = Array.from({length:10}, (_,i) => {
+            const a = (i * 36 - 90) * Math.PI / 180;
+            const x = (28 + 26 * Math.cos(a)).toFixed(1);
+            const y = (28 + 26 * Math.sin(a)).toFixed(1);
+            const on = table.guests[i] && table.guests[i].trim();
+            return `<circle cx="${x}" cy="${y}" r="4.5" fill="${on?'#800020':'#e5e7eb'}"/>`;
+        }).join('');
+        const svg = `<svg width="56" height="56" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="14" fill="#faf8f5" stroke="#e8ddd0" stroke-width="1.5"/>
+            <text x="28" y="32" text-anchor="middle" font-size="9" fill="#800020" font-weight="700">${filled}/10</text>
+            ${dots}</svg>`;
+
+        // Seat rows — two columns side by side
+        const leftSeats  = table.guests.slice(0,5);
+        const rightSeats = table.guests.slice(5,10);
+        const makeRow = (name, num) => `
+            <div style="display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid #f5f0eb">
+                <span style="font-size:9px;color:#ccc;width:12px;text-align:right;flex-shrink:0">${num}</span>
+                <span style="font-size:11px;font-weight:${name?'600':'400'};color:${name?'#800020':'#bbb'}">${name||'—'}</span>
+            </div>`;
+        const leftHtml  = leftSeats.map((n,i) => makeRow(n, i+1)).join('');
+        const rightHtml = rightSeats.map((n,i) => makeRow(n, i+6)).join('');
+
+        cards += `
+        <div style="background:#fff;border:1px solid #e8ddd0;border-radius:10px;padding:14px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0e8df;padding-bottom:8px">
+                <div>
+                    <div style="font-size:9px;color:#b08b43;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">Table ${idx+1}</div>
+                    <div style="font-size:12px;font-weight:700;color:#800020;font-family:serif">${table.name}</div>
+                </div>
+                ${svg}
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
+                <div>${leftHtml}</div>
+                <div>${rightHtml}</div>
+            </div>
+            <div>
+                <div style="height:3px;background:#f3ece5;border-radius:99px;overflow:hidden">
+                    <div style="height:100%;width:${pct}%;background:${pct>=100?'#22c55e':'#c5a059'};border-radius:99px"></div>
+                </div>
+                <div style="font-size:9px;color:#bbb;margin-top:2px;text-align:right">${filled} 已排 · ${10-filled} 空位</div>
+            </div>
+        </div>`;
+    });
+
+    const summary = `
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:18px;flex-wrap:wrap">
+            ${[`🪑 共 ${seatingData.length} 桌`,`👥 已排 ${totalGuests} 位`,`💺 空位 ${seatingData.length*10-totalGuests} 个`]
+                .map(t=>`<span style="background:#faf3eb;border:1px solid #e8ddd0;border-radius:99px;padding:4px 14px;font-size:10px;color:#800020;font-weight:600">${t}</span>`).join('')}
+        </div>`;
+
+    const body = seatingData.length === 0
+        ? `<div style="text-align:center;padding:60px;color:#ccc">暂无桌席数据</div>`
+        : summary + `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${cards}</div>`;
+
+    _openPrintWindow('婚礼座位表 Seating Chart', body);
+}
+
+// ── SECTION PRINTERS — each builds from data, not DOM ─────────────────
+function printSection(key) {
+    const builders = {
+        morning:   () => _buildRunsheet('morning',   '第一幕：清晨喜庆接亲'),
+        afternoon: () => _buildRunsheet('afternoon', '第二幕：傍晚首见外拍'),
+        evening:   () => _buildRunsheet('evening',   '第三幕：无伴电影感晚宴'),
+        guests:    _buildGuestList,
+        checklist: _buildChecklist,
+        budget:    _buildBudget,
     };
+    const fn = builders[key];
+    if (fn) fn();
+}
 
-    // Grab the rendered HTML of the target section, clone so we can strip buttons
-    const sourceEl = document.getElementById(`content-${sectionKey}`);
-    if (!sourceEl) return;
-    const clone = sourceEl.cloneNode(true);
+// Shared row CSS for tables
+const _TD = 'padding:6px 8px;border-bottom:1px solid #f0ebe4;font-size:11px;vertical-align:top';
+const _TH = 'padding:5px 8px;font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.05em;border-bottom:1.5px solid #ddd;background:#faf8f5';
 
-    // Remove all no-print elements from clone
-    clone.querySelectorAll('.no-print, button, [onclick]').forEach(el => el.remove());
-    // Make sure hidden inputs show their values as text for checklist
-    clone.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        const span = document.createElement('span');
-        span.textContent = cb.checked ? '☑' : '☐';
-        span.style.cssText = 'font-size:14px;margin-right:6px';
-        cb.parentNode.insertBefore(span, cb);
-        cb.style.display = 'none';
+function _buildRunsheet(act, title) {
+    const items = runsheetItems.filter(r => r.act === act);
+    if (items.length === 0) {
+        _openPrintWindow(title, `<p style="color:#ccc;text-align:center;padding:40px">暂无步骤</p>`);
+        return;
+    }
+    const rows = items.map((r, i) => `
+        <tr>
+            <td style="${_TD};width:22px;text-align:center">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#800020;color:#fff;font-size:9px;font-weight:700">${i+1}</span>
+            </td>
+            <td style="${_TD};width:100px;color:#800020;font-weight:600;white-space:nowrap">${r.time}</td>
+            <td style="${_TD};font-weight:700;color:#1a1a1a">${r.title}</td>
+            <td style="${_TD};color:#555;line-height:1.5">${r.desc}</td>
+        </tr>`).join('');
+
+    const body = `
+        <table style="width:100%;border-collapse:collapse">
+            <thead><tr>
+                <th style="${_TH};width:22px">#</th>
+                <th style="${_TH}">时间</th>
+                <th style="${_TH}">环节</th>
+                <th style="${_TH}">详情</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+    _openPrintWindow(title, body);
+}
+
+function _buildGuestList() {
+    const going = guestItems.filter(g => g.rsvp !== 'no');
+    const total = going.reduce((s,g) => s + (parseInt(g.pax)||1), 0);
+    const veg   = going.filter(g => g.diet === 'vegetarian').reduce((s,g) => s+(parseInt(g.pax)||1), 0);
+    const hal   = going.filter(g => g.diet === 'halal').reduce((s,g) => s+(parseInt(g.pax)||1), 0);
+
+    const chips = (label, val, color) =>
+        `<span style="background:${color}15;border:1px solid ${color}40;border-radius:99px;padding:3px 12px;font-size:10px;color:${color};font-weight:600">${label} ${val}</span>`;
+
+    const summary = `<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        ${chips('👥 出席',total,'#800020')}
+        ${chips('🌿 素食',veg,'#16a34a')}
+        ${chips('☪️ 清真',hal,'#0369a1')}
+    </div>`;
+
+    const rows = guestItems.map((g,i) => {
+        const table = seatingData.find(t => t.id === g.tableId);
+        const dietLabel = {none:'—', vegetarian:'素食', halal:'清真'}[g.diet] || '—';
+        const rsvpLabel = {going:'✅ 出席', maybe:'⏳ 待定', no:'❌ 不出席'}[g.rsvp] || g.rsvp;
+        return `<tr style="background:${i%2===0?'#fff':'#faf8f5'}">
+            <td style="${_TD};font-weight:600;color:#1a1a1a">${g.name}</td>
+            <td style="${_TD};text-align:center">${g.pax||1}</td>
+            <td style="${_TD}">${rsvpLabel}</td>
+            <td style="${_TD};color:#555">${dietLabel}</td>
+            <td style="${_TD};color:#800020;font-weight:600">${table ? table.name : '未安排'}</td>
+            <td style="${_TD};color:#777;font-style:italic;font-size:10px">${g.wish ? '"'+g.wish+'"' : ''}</td>
+        </tr>`;
+    }).join('');
+
+    const body = summary + `
+        <table style="width:100%;border-collapse:collapse">
+            <thead><tr>
+                <th style="${_TH}">姓名</th>
+                <th style="${_TH};text-align:center">人数</th>
+                <th style="${_TH}">RSVP</th>
+                <th style="${_TH}">饮食</th>
+                <th style="${_TH}">桌位</th>
+                <th style="${_TH}">祝福留言</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+    _openPrintWindow('宾客花名登账簿 Guest List', body);
+}
+
+function _buildChecklist() {
+    const sections = [
+        { key:'week-1', label:'婚礼前 1 周重点排查' },
+        { key:'day-of', label:'婚礼当天下午（晚宴开场前）' },
+    ];
+    let body = '';
+    sections.forEach(sec => {
+        const items = checklistItems.filter(c => c.section === sec.key);
+        if (items.length === 0) return;
+        body += `<div style="margin-bottom:20px">
+            <div style="font-size:11px;font-weight:700;color:#800020;border-left:3px solid #800020;padding-left:8px;margin-bottom:10px">${sec.label}</div>
+            ${items.map(c => `
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #f5f0eb">
+                    <span style="font-size:14px;flex-shrink:0;line-height:1">${c.checked ? '☑' : '☐'}</span>
+                    <span style="font-size:11px;color:${c.checked?'#aaa':'#1a1a1a'};text-decoration:${c.checked?'line-through':'none'};line-height:1.5">${c.text}</span>
+                </div>`).join('')}
+        </div>`;
     });
-    // Remove select dropdowns from inputs — show value as text
-    clone.querySelectorAll('select').forEach(sel => {
-        const span = document.createElement('span');
-        span.textContent = sel.options[sel.selectedIndex]?.text || '';
-        span.style.cssText = 'font-size:11px;color:#555';
-        sel.parentNode.insertBefore(span, sel);
-        sel.style.display = 'none';
-    });
+    _openPrintWindow('备婚核心倒计时清单 Checklist', body || '<p style="color:#ccc;text-align:center;padding:40px">暂无清单项目</p>');
+}
 
-    const bodyContent = clone.innerHTML;
+function _buildBudget() {
+    const totalBudget = parseFloat(document.getElementById('budget-total-new-input')?.value) || 0;
+    const spent = budgetNewItems.reduce((s,b) => s + b.amount, 0);
+    const left  = totalBudget - spent;
+    const pct   = totalBudget > 0 ? Math.round(spent/totalBudget*100) : 0;
+    const barColor = pct > 100 ? '#ef4444' : pct > 85 ? '#f97316' : '#22c55e';
 
-    const html = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<title>${SECTION_TITLES[sectionKey] || sectionKey} · ${groom} &amp; ${bride}</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Plus Jakarta Sans','Noto Serif SC',sans-serif;background:#fff;color:#222;font-size:12px;padding:20mm 15mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  @page{size:A4;margin:15mm 12mm}
-  @media print{.no-print{display:none!important}}
-  .print-header{text-align:center;padding-bottom:14px;border-bottom:2px solid #e8ddd0;margin-bottom:18px}
-  .print-header h1{font-family:serif;font-size:20px;color:#800020;font-weight:700}
-  .print-header p{font-size:10px;color:#b08b43;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
-  .print-btn{display:inline-flex;align-items:center;gap:6px;background:#800020;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:700;cursor:pointer;margin-bottom:14px}
-  .print-btn:hover{background:#66001a}
-  /* reset tab-content visibility */
-  .tab-content{display:block!important}
-  /* strip card shadows for print */
-  [class*="elegant-shadow"]{box-shadow:none!important}
-  [class*="rounded-2xl"]{border-radius:8px}
-  table{border-collapse:collapse;width:100%}
-  th,td{padding:5px 8px;border-bottom:1px solid #f5f0eb;font-size:11px}
-  th{font-weight:700;color:#888;text-transform:uppercase;font-size:9px;letter-spacing:0.06em}
-  input,textarea{border:none!important;background:transparent!important;padding:0!important;font-family:inherit;font-size:inherit;color:inherit;width:auto;resize:none}
-  .no-print{display:none!important}
-  button{display:none!important}
-  /* timeline lines */
-  [class*="border-l-2"]{border-left:2px solid #e8ddd0!important}
-  .footer-note{text-align:center;font-size:9px;color:#ccc;margin-top:20px;font-style:italic}
-</style>
-</head>
-<body>
-<div class="no-print" style="text-align:center;padding:10px 0">
-  <button class="print-btn" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
-</div>
-<div class="print-header">
-  <div style="font-size:9px;letter-spacing:0.3em;color:#b08b43;text-transform:uppercase;margin-bottom:4px">Wedding Planning · ${dateStr}</div>
-  <h1>${SECTION_TITLES[sectionKey] || sectionKey}</h1>
-  <p>${groom} &amp; ${bride}</p>
-</div>
-${bodyContent}
-<div class="footer-note">"良辰吉日定终身，百年琴瑟共白头" · 婚礼数字座舱自动生成</div>
-</body>
-</html>`;
+    const summary = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+            ${[['婚礼总预算',`RM ${totalBudget.toLocaleString()}`,'#800020'],
+               ['已花总数',`RM ${spent.toLocaleString()}`,'#dc2626'],
+               ['剩余余粮',`RM ${left.toLocaleString()}`,left>=0?'#16a34a':'#dc2626']]
+                .map(([l,v,c])=>`<div style="border:1px solid #eee;border-radius:8px;padding:10px;text-align:center">
+                    <div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">${l}</div>
+                    <div style="font-size:14px;font-weight:700;color:${c};font-family:monospace">${v}</div>
+                </div>`).join('')}
+        </div>
+        <div style="margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:10px;color:#999">预算使用进度</span>
+                <span style="font-size:10px;font-weight:700;color:${barColor}">${pct}%</span>
+            </div>
+            <div style="height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;margin-bottom:16px">
+                <div style="height:100%;width:${Math.min(pct,100)}%;background:${barColor};border-radius:99px"></div>
+            </div>
+        </div>`;
 
-    const w = window.open('', '_blank', 'width=900,height=700');
-    w.document.write(html);
-    w.document.close();
-    w.focus();
+    const rows = budgetNewItems.map((b,i) => `
+        <tr style="background:${i%2===0?'#fff':'#faf8f5'}">
+            <td style="${_TD};font-weight:600;color:#1a1a1a">${b.name || '—'}</td>
+            <td style="${_TD};color:#555">${b.category}</td>
+            <td style="${_TD};font-family:monospace;font-weight:700;color:#dc2626;text-align:right">RM ${b.amount.toLocaleString()}</td>
+            <td style="${_TD};color:${b.receiptURL?'#16a34a':'#ccc'}">${b.receiptURL?'✓ 已上传':'—'}</td>
+        </tr>`).join('');
+
+    const body = summary + (budgetNewItems.length === 0
+        ? `<p style="color:#ccc;text-align:center;padding:30px">暂无支出记录</p>`
+        : `<table style="width:100%;border-collapse:collapse">
+            <thead><tr>
+                <th style="${_TH}">分项类目</th>
+                <th style="${_TH}">分类</th>
+                <th style="${_TH};text-align:right">金额 (RM)</th>
+                <th style="${_TH}">收据</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+            <tfoot><tr>
+                <td colspan="2" style="padding:8px;font-weight:700;font-size:12px;text-align:right;border-top:2px solid #ddd">合计</td>
+                <td style="padding:8px;font-weight:700;font-size:12px;font-family:monospace;color:#dc2626;text-align:right;border-top:2px solid #ddd">RM ${spent.toLocaleString()}</td>
+                <td style="border-top:2px solid #ddd"></td>
+            </tr></tfoot>
+        </table>`);
+
+    _openPrintWindow('婚礼预算开销明细 Budget', body);
 }
 
 

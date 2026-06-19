@@ -297,6 +297,7 @@
             <div class="flex gap-2 no-print">
                 <button onclick="addNewRunsheetStep('morning')" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">➕ 新增接亲步骤</button>
                 <button onclick="resetRunsheetToDefault()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">🔄 恢复默认22步模板</button>
+                <button onclick="printSection('morning')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1"><i class="fa-solid fa-print text-[10px]"></i> 打印</button>
             </div>
         </div>
         <div id="runsheet-container-morning" class="space-y-6 relative border-l-2 border-champagne-100 ml-4 pl-6 md:ml-6 md:pl-8"></div>
@@ -312,6 +313,7 @@
             <div class="flex gap-2 no-print">
                 <button onclick="addNewRunsheetStep('afternoon')" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">➕ 新增外拍步骤</button>
                 <button onclick="resetRunsheetToDefault()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">🔄 恢复默认22步模板</button>
+                <button onclick="printSection('afternoon')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1"><i class="fa-solid fa-print text-[10px]"></i> 打印</button>
             </div>
         </div>
         <div id="runsheet-container-afternoon" class="space-y-6 relative border-l-2 border-champagne-100 ml-4 pl-6 md:ml-6 md:pl-8"></div>
@@ -327,6 +329,7 @@
             <div class="flex gap-2 no-print">
                 <button onclick="addNewRunsheetStep('evening')" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">➕ 新增晚宴步骤</button>
                 <button onclick="resetRunsheetToDefault()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">🔄 恢复默认22步模板</button>
+                <button onclick="printSection('evening')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1"><i class="fa-solid fa-print text-[10px]"></i> 打印</button>
             </div>
         </div>
         <div id="runsheet-container-evening" class="space-y-6 relative border-l-2 border-champagne-100 ml-4 pl-6 md:ml-6 md:pl-8"></div>
@@ -377,7 +380,10 @@
                 <h2 class="text-lg font-bold font-serif text-burgundy-500 mb-1">💰 婚礼智能预算控制水库</h2>
                 <p class="text-xs text-gray-500 leading-relaxed">开销类目明细、本地发票上传及多边报价比对，科学规避超支。</p>
             </div>
-            <button onclick="addNewBudgetItemNew()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 增加开销与发票</button>
+            <div class="flex gap-2 no-print">
+                <button onclick="addNewBudgetItemNew()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 增加开销与发票</button>
+                <button onclick="printSection('budget')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition flex items-center gap-1.5"><i class="fa-solid fa-print text-[10px]"></i> 打印预算表</button>
+            </div>
         </div>
         <!-- ── Row 1: 4 summary chips ── -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -547,7 +553,10 @@
                 <h2 class="text-lg font-bold font-serif text-burgundy-500 mb-1">👥 宾客 RSVP 登账 &amp; 10人制桌位排座</h2>
                 <p class="text-xs text-gray-500 leading-relaxed">电子请柬提交的人数与温馨祝福将自动流入。系统智能排定席位。</p>
             </div>
-            <button onclick="addNewGuestRow()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 增加宾客记录</button>
+            <div class="flex gap-2 flex-wrap no-print">
+                <button onclick="addNewGuestRow()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 增加宾客记录</button>
+                <button onclick="printSection('guests')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition flex items-center gap-1.5"><i class="fa-solid fa-print text-[10px]"></i> 打印宾客名单</button>
+            </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-xl border border-gray-100 elegant-shadow text-center"><span class="text-[10px] text-gray-400 font-bold block uppercase">总应邀出席人数</span><span id="stats-guest-total" class="text-xl font-bold text-burgundy-500 font-mono">0</span></div>
@@ -569,7 +578,12 @@
         <div class="bg-white rounded-2xl p-6 elegant-shadow border border-gray-100">
             <div class="flex justify-between items-center mb-4 border-b border-burgundy-100 pb-2 flex-wrap gap-2">
                 <h3 class="text-sm font-serif font-bold text-burgundy-500">🪑 晚宴桌席投影面 (10人制)</h3>
-                <button onclick="addNewTable()" class="bg-champagne-500 hover:bg-champagne-600 text-white text-[10px] font-bold py-1 px-3 rounded-lg transition">➕ 新增宴会桌</button>
+                <div class="flex gap-2 flex-wrap no-print">
+                    <button onclick="addNewTable()" class="bg-champagne-500 hover:bg-champagne-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg transition">➕ 新增宴会桌</button>
+                    <button onclick="printSeatingChart()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-[10px] font-bold py-1.5 px-3 rounded-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i> 打印 / 导出 PDF
+                    </button>
+                </div>
             </div>
             <div id="seating-tables-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </div>
@@ -583,6 +597,7 @@
                 <div class="flex gap-2 no-print">
                     <button onclick="addChecklistItem('week-1')" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">➕ 新增前1周任务</button>
                     <button onclick="addChecklistItem('day-of')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition">➕ 新增当天任务</button>
+                    <button onclick="printSection('checklist')" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold py-2 px-3.5 rounded-xl shadow-sm transition flex items-center gap-1"><i class="fa-solid fa-print text-[10px]"></i> 打印</button>
                 </div>
             </div>
             <div class="space-y-6">
@@ -1563,7 +1578,276 @@ function loadAllFromLocalStorage(){
     }catch(e){console.error("Failed to load: ",e);}
 }
 
-document.addEventListener('input',function(event){if(event.target.tagName==='INPUT'||event.target.tagName==='TEXTAREA')saveAllToLocalStorage();});
+// ═══════════════════════════════════════
+// PRINT / PDF FUNCTIONS
+// ═══════════════════════════════════════
+
+function printSeatingChart() {
+    const groom  = document.getElementById('groom-name')?.value  || '新郎';
+    const bride  = document.getElementById('bride-name')?.value  || '新娘';
+    const venue  = document.getElementById('invite-location-input')?.value || '';
+    const dateEl = document.getElementById('header-wedding-date');
+    const dateStr = dateEl ? dateEl.innerText : '';
+
+    // Build table cards HTML
+    let tablesHtml = '';
+    seatingData.forEach((table, tIdx) => {
+        const seats = Array.from({length:10}, (_,i) => {
+            const name = table.guests[i] || '';
+            return `<tr>
+                <td style="padding:5px 8px;font-size:11px;color:#888;width:20px;font-family:monospace">${i+1}</td>
+                <td style="padding:5px 8px;font-size:12px;font-weight:${name?'600':'400'};color:${name?'#800020':'#ccc'};border-bottom:1px solid #f5f0eb">${name || '—'}</td>
+            </tr>`;
+        }).join('');
+
+        const filledCount = table.guests.filter(g => g && g.trim()).length;
+        const pct = Math.round(filledCount / 10 * 100);
+
+        // Mini circular seat diagram (SVG)
+        const angles = Array.from({length:10}, (_,i) => (i * 36 - 90) * Math.PI / 180);
+        const circleDots = angles.map((a, i) => {
+            const x = 40 + 28 * Math.cos(a);
+            const y = 40 + 28 * Math.sin(a);
+            const filled = table.guests[i] && table.guests[i].trim();
+            return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${filled ? '#800020' : '#e5e7eb'}" />`;
+        }).join('');
+
+        tablesHtml += `
+        <div style="background:#fff;border:1px solid #e8ddd0;border-radius:16px;padding:20px;break-inside:avoid;page-break-inside:avoid;display:flex;flex-direction:column;gap:12px">
+            <!-- Table header -->
+            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0e8df;padding-bottom:10px">
+                <div>
+                    <div style="font-size:10px;color:#b08b43;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px">Table ${tIdx+1}</div>
+                    <div style="font-size:13px;font-weight:700;color:#800020;font-family:serif">${table.name}</div>
+                </div>
+                <div style="text-align:center">
+                    <svg width="56" height="56" viewBox="0 0 80 80">
+                        <circle cx="40" cy="40" r="18" fill="#faf8f5" stroke="#e8ddd0" stroke-width="2"/>
+                        <text x="40" y="45" text-anchor="middle" font-size="11" fill="#800020" font-weight="700">${filledCount}/10</text>
+                        ${circleDots}
+                    </svg>
+                </div>
+            </div>
+            <!-- Seat list -->
+            <table style="width:100%;border-collapse:collapse">
+                <tbody>${seats}</tbody>
+            </table>
+            <!-- Capacity bar -->
+            <div>
+                <div style="height:4px;background:#f3ece5;border-radius:99px;overflow:hidden">
+                    <div style="height:100%;width:${pct}%;background:${pct>=100?'#22c55e':'#c5a059'};border-radius:99px"></div>
+                </div>
+                <div style="font-size:9px;color:#bbb;margin-top:3px;text-align:right">${filledCount} 已排 · ${10-filledCount} 空位</div>
+            </div>
+        </div>`;
+    });
+
+    const emptyState = seatingData.length === 0
+        ? `<div style="text-align:center;padding:60px;color:#ccc;font-size:14px">暂无桌席数据</div>`
+        : '';
+
+    const totalGuests = seatingData.reduce((s,t) => s + t.guests.filter(g=>g&&g.trim()).length, 0);
+
+    const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>婚礼座位表 · ${groom} &amp; ${bride}</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'PingFang SC','Microsoft YaHei',sans-serif; background:#fdfaf8; color:#222; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  @page { size:A4; margin:15mm 12mm; }
+  @media print {
+    .no-print { display:none !important; }
+    body { background:white; }
+    .page-header { position:running(header); }
+  }
+  .page-header {
+    text-align:center;
+    padding:24px 0 18px;
+    border-bottom:2px solid #e8ddd0;
+    margin-bottom:24px;
+  }
+  .couple-names {
+    font-size:28px;
+    font-weight:700;
+    color:#800020;
+    font-family:serif;
+    letter-spacing:0.04em;
+  }
+  .wedding-meta {
+    font-size:11px;
+    color:#b08b43;
+    margin-top:6px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .summary-bar {
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .summary-chip {
+    background:#faf3eb;
+    border:1px solid #e8ddd0;
+    border-radius:99px;
+    padding:5px 16px;
+    font-size:11px;
+    color:#800020;
+    font-weight:600;
+  }
+  .tables-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
+  .print-btn {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:#800020;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:8px 18px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    margin-bottom:16px;
+    letter-spacing:0.05em;
+  }
+  .print-btn:hover { background:#66001a; }
+  .footer-note {
+    text-align:center;
+    font-size:9px;
+    color:#ccc;
+    margin-top:24px;
+    font-style:italic;
+  }
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center;padding:12px 0">
+  <button class="print-btn" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
+</div>
+<div class="page-header">
+  <div style="font-size:10px;letter-spacing:0.3em;color:#b08b43;text-transform:uppercase;margin-bottom:6px">Wedding Seating Chart</div>
+  <div class="couple-names">${groom} &amp; ${bride}</div>
+  <div class="wedding-meta">${dateStr}${venue ? ' · ' + venue : ''}</div>
+</div>
+<div class="summary-bar">
+  <div class="summary-chip">🪑 共 ${seatingData.length} 桌</div>
+  <div class="summary-chip">👥 已排 ${totalGuests} 位宾客</div>
+  <div class="summary-chip">💺 空位 ${seatingData.length*10 - totalGuests} 个</div>
+</div>
+${emptyState}
+<div class="tables-grid">${tablesHtml}</div>
+<div class="footer-note">"良辰吉日定终身，百年琴瑟共白头" · 婚礼数字座舱自动生成</div>
+</body>
+</html>`;
+
+    const w = window.open('', '_blank', 'width=900,height=700');
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+}
+
+// ── Generic section printer ────────────────────────────────────────────
+function printSection(sectionKey) {
+    const groom  = document.getElementById('groom-name')?.value  || '新郎';
+    const bride  = document.getElementById('bride-name')?.value  || '新娘';
+    const dateEl = document.getElementById('header-wedding-date');
+    const dateStr = dateEl ? dateEl.innerText : '';
+
+    const SECTION_TITLES = {
+        morning:   '第一幕：清晨喜庆接亲 Runsheet',
+        afternoon: '第二幕：傍晚首见外拍 Runsheet',
+        evening:   '第三幕：无伴电影感晚宴 Runsheet',
+        guests:    '宾客花名登账簿 Guest List',
+        checklist: '备婚核心倒计时清单 Checklist',
+        budget:    '婚礼预算开销明细 Budget',
+    };
+
+    // Grab the rendered HTML of the target section, clone so we can strip buttons
+    const sourceEl = document.getElementById(`content-${sectionKey}`);
+    if (!sourceEl) return;
+    const clone = sourceEl.cloneNode(true);
+
+    // Remove all no-print elements from clone
+    clone.querySelectorAll('.no-print, button, [onclick]').forEach(el => el.remove());
+    // Make sure hidden inputs show their values as text for checklist
+    clone.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const span = document.createElement('span');
+        span.textContent = cb.checked ? '☑' : '☐';
+        span.style.cssText = 'font-size:14px;margin-right:6px';
+        cb.parentNode.insertBefore(span, cb);
+        cb.style.display = 'none';
+    });
+    // Remove select dropdowns from inputs — show value as text
+    clone.querySelectorAll('select').forEach(sel => {
+        const span = document.createElement('span');
+        span.textContent = sel.options[sel.selectedIndex]?.text || '';
+        span.style.cssText = 'font-size:11px;color:#555';
+        sel.parentNode.insertBefore(span, sel);
+        sel.style.display = 'none';
+    });
+
+    const bodyContent = clone.innerHTML;
+
+    const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>${SECTION_TITLES[sectionKey] || sectionKey} · ${groom} &amp; ${bride}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Plus Jakarta Sans','Noto Serif SC',sans-serif;background:#fff;color:#222;font-size:12px;padding:20mm 15mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4;margin:15mm 12mm}
+  @media print{.no-print{display:none!important}}
+  .print-header{text-align:center;padding-bottom:14px;border-bottom:2px solid #e8ddd0;margin-bottom:18px}
+  .print-header h1{font-family:serif;font-size:20px;color:#800020;font-weight:700}
+  .print-header p{font-size:10px;color:#b08b43;letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
+  .print-btn{display:inline-flex;align-items:center;gap:6px;background:#800020;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:700;cursor:pointer;margin-bottom:14px}
+  .print-btn:hover{background:#66001a}
+  /* reset tab-content visibility */
+  .tab-content{display:block!important}
+  /* strip card shadows for print */
+  [class*="elegant-shadow"]{box-shadow:none!important}
+  [class*="rounded-2xl"]{border-radius:8px}
+  table{border-collapse:collapse;width:100%}
+  th,td{padding:5px 8px;border-bottom:1px solid #f5f0eb;font-size:11px}
+  th{font-weight:700;color:#888;text-transform:uppercase;font-size:9px;letter-spacing:0.06em}
+  input,textarea{border:none!important;background:transparent!important;padding:0!important;font-family:inherit;font-size:inherit;color:inherit;width:auto;resize:none}
+  .no-print{display:none!important}
+  button{display:none!important}
+  /* timeline lines */
+  [class*="border-l-2"]{border-left:2px solid #e8ddd0!important}
+  .footer-note{text-align:center;font-size:9px;color:#ccc;margin-top:20px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="no-print" style="text-align:center;padding:10px 0">
+  <button class="print-btn" onclick="window.print()">🖨️ 打印 / 另存为 PDF</button>
+</div>
+<div class="print-header">
+  <div style="font-size:9px;letter-spacing:0.3em;color:#b08b43;text-transform:uppercase;margin-bottom:4px">Wedding Planning · ${dateStr}</div>
+  <h1>${SECTION_TITLES[sectionKey] || sectionKey}</h1>
+  <p>${groom} &amp; ${bride}</p>
+</div>
+${bodyContent}
+<div class="footer-note">"良辰吉日定终身，百年琴瑟共白头" · 婚礼数字座舱自动生成</div>
+</body>
+</html>`;
+
+    const w = window.open('', '_blank', 'width=900,height=700');
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+}
+
 
 // ═══════════════════════════════════════
 // MODAL

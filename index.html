@@ -405,38 +405,57 @@
             </div>
         </div>
 
-        <!-- ── Row 2: Saving Goal card ── -->
-        <div class="bg-white rounded-2xl p-6 elegant-shadow border border-champagne-100 mb-6">
-            <div class="flex flex-wrap items-start justify-between gap-6">
+        <!-- ── Row 2: Saving Goal (deposit log) ── -->
+        <div class="bg-white rounded-2xl elegant-shadow border border-champagne-100 mb-6 overflow-hidden">
 
-                <!-- Left: inputs -->
-                <div class="flex-1 min-w-[220px] space-y-4">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-base">🏦</span>
+            <!-- Card header -->
+            <div class="bg-gradient-to-r from-[#faf3eb] to-white px-6 py-4 border-b border-champagne-100 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">🏦</span>
+                    <div>
                         <h3 class="text-sm font-serif font-bold text-burgundy-500">婚礼存钱目标 Saving Goal</h3>
+                        <p class="text-[10px] text-gray-400 mt-0.5">每次存了多少就记录多少，自动累加追踪！</p>
                     </div>
-                    <p class="text-[11px] text-gray-400 leading-relaxed -mt-2">设定你们的存钱目标，追踪婚礼基金的累积进度，时刻知道距离梦想婚礼还差多少！</p>
+                </div>
+                <!-- Goal target input -->
+                <div class="flex items-center gap-2 bg-white border border-champagne-100 rounded-xl px-3 py-2">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap">存钱目标</span>
+                    <span class="text-xs font-bold text-gray-400">RM</span>
+                    <input type="number" id="saving-goal-input" oninput="calculateSavingGoal()"
+                        placeholder="例：80000"
+                        class="text-base font-bold text-champagne-600 font-mono w-24 bg-transparent outline-none border-b border-gray-200 focus:border-champagne-500 text-center">
+                </div>
+            </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">存钱目标总额 Goal</label>
-                            <div class="flex items-center gap-1 border-b border-gray-200 focus-within:border-burgundy-500 pb-1">
-                                <span class="text-xs text-gray-400 font-bold">RM</span>
-                                <input type="number" id="saving-goal-input" oninput="calculateSavingGoal()" placeholder="例如：80000"
-                                    class="flex-1 text-lg font-bold text-champagne-600 font-mono bg-transparent outline-none w-full">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-0">
+
+                <!-- Left: progress visuals -->
+                <div class="md:col-span-5 p-6 flex flex-col gap-5 border-b md:border-b-0 md:border-r border-gray-100">
+
+                    <!-- Donut + total saved -->
+                    <div class="flex items-center gap-5">
+                        <div class="relative flex-shrink-0">
+                            <svg viewBox="0 0 120 120" class="w-24 h-24 -rotate-90">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="14"/>
+                                <circle id="saving-ring" cx="60" cy="60" r="50" fill="none"
+                                    stroke="#c5a059" stroke-width="14" stroke-linecap="round"
+                                    stroke-dasharray="314" stroke-dashoffset="314"
+                                    style="transition:stroke-dashoffset 0.6s ease"/>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center rotate-90">
+                                <span id="saving-ring-pct" class="text-base font-bold font-mono text-champagne-600 leading-none">0%</span>
+                                <span class="text-[9px] text-gray-400 font-bold">完成</span>
                             </div>
                         </div>
-                        <div>
-                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">目前已存入金额 Saved</label>
-                            <div class="flex items-center gap-1 border-b border-gray-200 focus-within:border-burgundy-500 pb-1">
-                                <span class="text-xs text-gray-400 font-bold">RM</span>
-                                <input type="number" id="saving-saved-input" oninput="calculateSavingGoal()" placeholder="例如：25000"
-                                    class="flex-1 text-lg font-bold text-green-600 font-mono bg-transparent outline-none w-full">
-                            </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">累计已存入</div>
+                            <div class="text-2xl font-bold font-mono text-green-600 mt-0.5">RM <span id="saving-total-display">0</span></div>
+                            <div class="text-[10px] text-gray-400 mt-1">距离目标还差</div>
+                            <div id="saving-gap" class="text-sm font-bold font-mono text-burgundy-500">RM —</div>
                         </div>
                     </div>
 
-                    <!-- Progress bar + milestone labels -->
+                    <!-- Progress bar -->
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
                             <span class="text-[10px] text-gray-400 font-bold">存款进度</span>
@@ -445,8 +464,7 @@
                         <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
                             <div id="saving-bar" class="h-3 rounded-full transition-all duration-500 bg-gradient-to-r from-champagne-500 to-green-400" style="width:0%"></div>
                         </div>
-                        <!-- Milestone ticks -->
-                        <div class="flex justify-between mt-1 px-0.5">
+                        <div class="flex justify-between mt-1">
                             <span class="text-[9px] text-gray-300">0%</span>
                             <span class="text-[9px] text-gray-300">25%</span>
                             <span class="text-[9px] text-gray-300">50%</span>
@@ -455,33 +473,43 @@
                         </div>
                     </div>
 
-                    <!-- Status message -->
-                    <div id="saving-status-msg" class="hidden text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed"></div>
+                    <!-- Status pill -->
+                    <div id="saving-status-msg" class="hidden text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed"></div>
                 </div>
 
-                <!-- Right: SVG donut ring -->
-                <div class="flex flex-col items-center justify-center gap-2 min-w-[130px]">
-                    <svg viewBox="0 0 120 120" class="w-28 h-28 -rotate-90">
-                        <!-- Track -->
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="12"/>
-                        <!-- Progress arc -->
-                        <circle id="saving-ring" cx="60" cy="60" r="50" fill="none"
-                            stroke="#c5a059" stroke-width="12"
-                            stroke-linecap="round"
-                            stroke-dasharray="314"
-                            stroke-dashoffset="314"
-                            style="transition: stroke-dashoffset 0.6s ease"/>
-                    </svg>
-                    <div class="text-center -mt-1">
-                        <div id="saving-ring-pct" class="text-xl font-bold font-mono text-champagne-600">0%</div>
-                        <div class="text-[10px] text-gray-400 font-semibold">存款完成率</div>
-                    </div>
-                    <div class="text-center mt-1 bg-gray-50 rounded-xl px-3 py-2 border border-gray-100 w-full">
-                        <div class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">距离目标还差</div>
-                        <div id="saving-gap" class="text-sm font-bold font-mono text-burgundy-500 mt-0.5">RM —</div>
-                    </div>
-                </div>
+                <!-- Right: deposit log -->
+                <div class="md:col-span-7 p-6 flex flex-col gap-4">
 
+                    <!-- Add deposit row -->
+                    <div class="flex items-end gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">存款备注 Note</label>
+                            <input type="text" id="deposit-note-input" placeholder="例如：2月份薪水、婚礼基金、年终花红…"
+                                class="w-full text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:border-champagne-500 outline-none">
+                        </div>
+                        <div class="w-28 flex-shrink-0">
+                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">金额 RM</label>
+                            <input type="number" id="deposit-amount-input" placeholder="0"
+                                class="w-full text-xs font-mono font-bold bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:border-champagne-500 outline-none"
+                                onkeydown="if(event.key==='Enter')addDepositEntry()">
+                        </div>
+                        <button onclick="addDepositEntry()"
+                            class="flex-shrink-0 bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition h-[34px] flex items-center gap-1">
+                            <i class="fa-solid fa-plus text-[10px]"></i> 存入
+                        </button>
+                    </div>
+
+                    <!-- Deposit history list -->
+                    <div class="flex-1 max-h-52 overflow-y-auto space-y-2 pr-1" id="deposit-log-list">
+                        <div class="text-center py-6 text-gray-300 text-xs" id="deposit-empty-state">
+                            <i class="fa-solid fa-piggy-bank text-2xl block mb-2"></i>
+                            还没有存款记录，开始记录你们的第一笔婚礼基金吧！
+                        </div>
+                    </div>
+
+                    <!-- Total deposits count -->
+                    <div class="text-[10px] text-gray-300 font-semibold text-right" id="deposit-count-label"></div>
+                </div>
             </div>
         </div>
         <div class="bg-white rounded-2xl p-6 elegant-shadow border border-gray-100 mb-8">
@@ -747,6 +775,7 @@ let targetWeddingDateValue = "";
 let seatingData = [];
 let todoItems = [];
 let guestItems = [];
+let depositEntries = []; // saving goal deposit log — declared here, logic below
 let budgetNewItems = [];
 let quoteItems = [];
 let likedInspirations = [];
@@ -811,6 +840,8 @@ window.onload = function() {
     renderTodoList();
     renderBudgetNewTable();
     renderQuotesTable();
+    renderDepositLog();
+    calculateSavingGoal();
     renderGuestsTable();
     renderSeatingTables();
     updateInvitePreview();
@@ -1193,70 +1224,139 @@ function calculateBudgetNewSummary(){
     if(els.bar)els.bar.className=`bg-${color}-500 h-2.5 rounded-full transition-all duration-300`;
 }
 
-function calculateSavingGoal() {
-    const goalInput  = document.getElementById('saving-goal-input');
-    const savedInput = document.getElementById('saving-saved-input');
-    const bar        = document.getElementById('saving-bar');
-    const ring       = document.getElementById('saving-ring');
-    const pctLabel   = document.getElementById('saving-pct-label');
-    const ringPct    = document.getElementById('saving-ring-pct');
-    const gapEl      = document.getElementById('saving-gap');
-    const statusEl   = document.getElementById('saving-status-msg');
+// ═══════════════════════════════════════
+// SAVING GOAL — deposit log
+// ═══════════════════════════════════════
 
-    const goal  = parseFloat(goalInput?.value)  || 0;
-    const saved = parseFloat(savedInput?.value) || 0;
+function addDepositEntry() {
+    const noteEl   = document.getElementById('deposit-note-input');
+    const amountEl = document.getElementById('deposit-amount-input');
+    const amount   = parseFloat(amountEl?.value) || 0;
+    if (amount <= 0) { amountEl?.focus(); return; }
+
+    const note = noteEl?.value.trim() || '存款';
+    depositEntries.push({
+        id:     'dep_' + Date.now(),
+        date:   new Date().toLocaleDateString('zh-MY', { year:'numeric', month:'short', day:'numeric' }),
+        note,
+        amount
+    });
+
+    // Reset inputs
+    if (noteEl)   noteEl.value   = '';
+    if (amountEl) amountEl.value = '';
+
+    renderDepositLog();
+    calculateSavingGoal();
+    saveAllToLocalStorage();
+}
+
+function deleteDepositEntry(id) {
+    depositEntries = depositEntries.filter(d => d.id !== id);
+    renderDepositLog();
+    calculateSavingGoal();
+    saveAllToLocalStorage();
+}
+
+function renderDepositLog() {
+    const list      = document.getElementById('deposit-log-list');
+    const emptyEl   = document.getElementById('deposit-empty-state');
+    const countEl   = document.getElementById('deposit-count-label');
+    if (!list) return;
+
+    if (depositEntries.length === 0) {
+        list.innerHTML = `
+            <div class="text-center py-6 text-gray-300 text-xs" id="deposit-empty-state">
+                <i class="fa-solid fa-piggy-bank text-2xl block mb-2"></i>
+                还没有存款记录，开始记录你们的第一笔婚礼基金吧！
+            </div>`;
+        if (countEl) countEl.textContent = '';
+        return;
+    }
+
+    // Show newest first
+    const sorted = [...depositEntries].reverse();
+    list.innerHTML = '';
+    sorted.forEach(dep => {
+        list.insertAdjacentHTML('beforeend', `
+            <div class="flex items-center gap-3 bg-gray-50 hover:bg-champagne-100/20 rounded-xl px-3 py-2.5 group transition-all">
+                <div class="w-7 h-7 rounded-full bg-champagne-100 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-coins text-champagne-600 text-[10px]"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold text-gray-800 truncate">${dep.note}</p>
+                    <p class="text-[10px] text-gray-400">${dep.date}</p>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <p class="text-xs font-bold font-mono text-green-600">+RM ${dep.amount.toLocaleString()}</p>
+                </div>
+                <button onclick="deleteDepositEntry('${dep.id}')"
+                    class="text-gray-200 hover:text-red-400 text-[11px] opacity-0 group-hover:opacity-100 transition flex-shrink-0">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `);
+    });
+
+    if (countEl) countEl.textContent = `共 ${depositEntries.length} 笔存款记录`;
+}
+
+function calculateSavingGoal() {
+    const goalInput = document.getElementById('saving-goal-input');
+    const goal      = parseFloat(goalInput?.value) || 0;
+    const saved     = depositEntries.reduce((sum, d) => sum + d.amount, 0);
+
+    const totalDisplay = document.getElementById('saving-total-display');
+    const bar          = document.getElementById('saving-bar');
+    const ring         = document.getElementById('saving-ring');
+    const pctLabel     = document.getElementById('saving-pct-label');
+    const ringPct      = document.getElementById('saving-ring-pct');
+    const gapEl        = document.getElementById('saving-gap');
+    const statusEl     = document.getElementById('saving-status-msg');
+
+    if (totalDisplay) totalDisplay.textContent = saved.toLocaleString();
 
     if (goal <= 0) {
-        // Reset all visuals
         if (bar)      bar.style.width = '0%';
         if (ring)     ring.style.strokeDashoffset = '314';
         if (pctLabel) pctLabel.textContent = '0%';
         if (ringPct)  ringPct.textContent  = '0%';
         if (gapEl)    gapEl.textContent    = 'RM —';
         if (statusEl) statusEl.classList.add('hidden');
-        saveAllToLocalStorage();
         return;
     }
 
-    const pct  = Math.min(Math.round((saved / goal) * 100), 100);
-    const gap  = Math.max(goal - saved, 0);
+    const pct = Math.min(Math.round((saved / goal) * 100), 100);
+    const gap = Math.max(goal - saved, 0);
 
-    // Bar
-    if (bar) bar.style.width = `${pct}%`;
-
-    // Ring (circumference = 2π×50 ≈ 314)
-    if (ring) ring.style.strokeDashoffset = String(314 - (314 * pct / 100));
-
-    // Ring colour: green when done
-    if (ring) ring.style.stroke = pct >= 100 ? '#22c55e' : '#c5a059';
-
-    // Labels
+    if (bar)      bar.style.width = `${pct}%`;
+    if (ring)  {
+        ring.style.strokeDashoffset = String(314 - (314 * pct / 100));
+        ring.style.stroke = pct >= 100 ? '#22c55e' : '#c5a059';
+    }
     if (pctLabel) pctLabel.textContent = `${pct}%`;
     if (ringPct)  ringPct.textContent  = `${pct}%`;
     if (gapEl)    gapEl.textContent    = pct >= 100 ? '🎉 目标达成！' : `RM ${gap.toLocaleString()}`;
 
-    // Status message
     if (statusEl) {
         statusEl.classList.remove('hidden');
         if (pct >= 100) {
-            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-green-50 text-green-700 border border-green-200';
-            statusEl.innerHTML = '🎉 <strong>恭喜！婚礼存款目标已达成！</strong> 现在可以放心预订各项婚礼服务，梦想婚礼指日可待！';
+            statusEl.className = 'text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed bg-green-50 text-green-700 border border-green-200';
+            statusEl.innerHTML = '🎉 <strong>恭喜！存款目标已达成！</strong> 可以放心预订各项婚礼服务了！';
         } else if (pct >= 75) {
-            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-champagne-100 text-champagne-600 border border-champagne-100';
-            statusEl.innerHTML = `✨ <strong>冲刺阶段！</strong> 已存入 ${pct}%，距离目标还差 RM ${gap.toLocaleString()}，加油！`;
+            statusEl.className = 'text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed bg-champagne-100 text-champagne-600 border border-champagne-100';
+            statusEl.innerHTML = `✨ <strong>冲刺阶段！</strong> 已存 ${pct}%，还差 RM ${gap.toLocaleString()}，快了！`;
         } else if (pct >= 50) {
-            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-blue-50 text-blue-700 border border-blue-100';
-            statusEl.innerHTML = `💪 <strong>过半了！</strong> 已达成 ${pct}%，继续保持每月定存的好习惯！`;
+            statusEl.className = 'text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed bg-blue-50 text-blue-700 border border-blue-100';
+            statusEl.innerHTML = `💪 <strong>过半了！</strong> 已达成 ${pct}%，继续保持！`;
         } else if (pct >= 25) {
-            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-purple-50 text-purple-700 border border-purple-100';
-            statusEl.innerHTML = `🌱 <strong>良好起步！</strong> 已存 ${pct}%，建议每月固定存入 RM ${Math.ceil(gap/12).toLocaleString()} 可在一年内达标。`;
+            statusEl.className = 'text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed bg-purple-50 text-purple-700 border border-purple-100';
+            statusEl.innerHTML = `🌱 <strong>良好起步！</strong> 建议每月存入 RM ${Math.ceil(gap/12).toLocaleString()} 可在一年内达标。`;
         } else {
-            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-gray-50 text-gray-600 border border-gray-200';
-            statusEl.innerHTML = `📌 <strong>刚刚起步！</strong> 已存 ${pct}%，婚礼基金已开始积累，坚持定存是关键！`;
+            statusEl.className = 'text-xs font-semibold rounded-xl px-3 py-2.5 leading-relaxed bg-gray-50 text-gray-600 border border-gray-200';
+            statusEl.innerHTML = `📌 <strong>婚礼基金已开启！</strong> 坚持每月定存，梦想婚礼不远了！`;
         }
     }
-
-    saveAllToLocalStorage();
 }
 
 // ═══════════════════════════════════════
@@ -1421,7 +1521,7 @@ function saveAllToLocalStorage(){
         budgetNewItems,quoteItems,likedInspirations,
         budgetTotalNew:document.getElementById('budget-total-new-input')?.value||'60000',
         savingGoal:document.getElementById('saving-goal-input')?.value||'',
-        savingSaved:document.getElementById('saving-saved-input')?.value||'',
+        depositEntries,
         runsheetItems,
     };
     localStorage.setItem('wedding_v9_data',JSON.stringify(payload));
@@ -1455,8 +1555,7 @@ function loadAllFromLocalStorage(){
         budgetNewItems=data.budgetNewItems&&data.budgetNewItems.length>0?data.budgetNewItems:[];
         if(data.budgetTotalNew&&document.getElementById('budget-total-new-input'))document.getElementById('budget-total-new-input').value=data.budgetTotalNew;
         if(data.savingGoal&&document.getElementById('saving-goal-input'))document.getElementById('saving-goal-input').value=data.savingGoal;
-        if(data.savingSaved&&document.getElementById('saving-saved-input'))document.getElementById('saving-saved-input').value=data.savingSaved;
-        calculateSavingGoal();
+        depositEntries=data.depositEntries&&data.depositEntries.length>0?data.depositEntries:[];
         quoteItems=data.quoteItems&&data.quoteItems.length>0?data.quoteItems:[];
         likedInspirations=data.likedInspirations||[];
         runsheetItems=data.runsheetItems&&data.runsheetItems.length>0?data.runsheetItems:JSON.parse(JSON.stringify(defaultRunsheetTemplates));

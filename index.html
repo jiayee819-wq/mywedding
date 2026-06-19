@@ -68,14 +68,29 @@
     </button>
 
     <div class="w-full max-w-sm mx-auto">
-        <!-- Hero image -->
-        <div class="relative h-72 rounded-t-3xl overflow-hidden">
-            <div id="go-carousel" class="w-full h-full flex transition-transform duration-500 ease-out"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60"></div>
-            <!-- Name overlay -->
-            <div class="absolute bottom-4 left-0 right-0 text-center text-white">
-                <p class="text-[10px] tracking-[0.25em] uppercase opacity-80 font-sans">We Are Getting Married</p>
-                <h1 class="text-2xl font-serif font-bold mt-0.5"><span id="go-groom">新郎</span> &amp; <span id="go-bride">新娘</span></h1>
+        <!-- Hero carousel -->
+        <div class="relative rounded-t-3xl overflow-hidden" style="height:320px">
+            <!-- Slides -->
+            <div id="go-carousel" class="w-full h-full flex transition-transform duration-700 ease-in-out"></div>
+
+            <!-- Gradient overlays -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/70 pointer-events-none"></div>
+
+            <!-- Prev / Next arrows -->
+            <button onclick="goCarouselPrev()" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/25 hover:bg-white/50 backdrop-blur-sm text-white w-8 h-8 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+            <button onclick="goCarouselNext()" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/25 hover:bg-white/50 backdrop-blur-sm text-white w-8 h-8 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+
+            <!-- Dot indicators -->
+            <div id="go-carousel-dots" class="absolute bottom-14 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
+
+            <!-- Name overlay pinned to bottom -->
+            <div class="absolute bottom-4 left-0 right-0 text-center text-white z-10 px-4">
+                <p class="text-[10px] tracking-[0.3em] uppercase opacity-80 font-sans">We Are Getting Married</p>
+                <h1 class="text-2xl font-serif font-bold mt-0.5 drop-shadow-md"><span id="go-groom">新郎</span> &amp; <span id="go-bride">新娘</span></h1>
             </div>
         </div>
 
@@ -264,16 +279,13 @@
         <button onclick="switchTab('evening')" id="tab-evening" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">第三幕：无伴电影感晚宴</button>
         <button onclick="switchTab('todo')" id="tab-todo" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">📋 To-Do &amp; 双人同步</button>
         <button onclick="switchTab('budget')" id="tab-budget" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">💰 预算开销与比价</button>
-        <button onclick="switchTab('vendors')" id="tab-vendors" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">📍 Vendor / 优质商家</button>
         <button onclick="switchTab('guests')" id="tab-guests" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">👥 宾客管理 &amp; 桌席</button>
         <button onclick="switchTab('checklist')" id="tab-checklist" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">📋 备婚倒计时清单</button>
         <button onclick="switchTab('tools')" id="tab-tools" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">📱 电子请柬与工具</button>
         <!-- ★ NEW ★ -->
-        <button onclick="switchTab('party')" id="tab-party" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-gray-400 hover:text-gray-600 transition-all duration-200 whitespace-nowrap">💍 团队 &amp; 联络手册</button>
         <button onclick="openGuestMode()" id="tab-guestmode" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-burgundy-400 hover:text-burgundy-600 transition-all duration-200 whitespace-nowrap">📨 Guest Mode</button>
         <button onclick="switchTab('ai-assistant')" id="tab-ai-assistant" class="py-3 px-4 font-serif font-semibold text-sm border-b-2 border-transparent text-burgundy-500 font-bold hover:text-burgundy-700 transition-all duration-200 whitespace-nowrap">🤖 AI 策划师</button>
     </div>
-
 
     <!-- ── ACT 1: Morning ── -->
     <div id="content-morning" class="tab-content block animate-fade">
@@ -367,7 +379,8 @@
             </div>
             <button onclick="addNewBudgetItemNew()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 增加开销与发票</button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <!-- ── Row 1: 4 summary chips ── -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div class="bg-white p-5 rounded-2xl border border-burgundy-50 elegant-shadow text-center">
                 <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">婚礼总预算底盘</span>
                 <div class="flex justify-center items-center gap-1">
@@ -389,6 +402,86 @@
                     <div class="w-full bg-gray-100 rounded-full h-2.5 mr-2"><div id="budget-new-progress-bar" class="bg-green-500 h-2.5 rounded-full transition-all duration-300" style="width:0%"></div></div>
                     <span id="budget-new-progress-percent" class="text-xs font-bold text-green-600">0%</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- ── Row 2: Saving Goal card ── -->
+        <div class="bg-white rounded-2xl p-6 elegant-shadow border border-champagne-100 mb-6">
+            <div class="flex flex-wrap items-start justify-between gap-6">
+
+                <!-- Left: inputs -->
+                <div class="flex-1 min-w-[220px] space-y-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-base">🏦</span>
+                        <h3 class="text-sm font-serif font-bold text-burgundy-500">婚礼存钱目标 Saving Goal</h3>
+                    </div>
+                    <p class="text-[11px] text-gray-400 leading-relaxed -mt-2">设定你们的存钱目标，追踪婚礼基金的累积进度，时刻知道距离梦想婚礼还差多少！</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">存钱目标总额 Goal</label>
+                            <div class="flex items-center gap-1 border-b border-gray-200 focus-within:border-burgundy-500 pb-1">
+                                <span class="text-xs text-gray-400 font-bold">RM</span>
+                                <input type="number" id="saving-goal-input" oninput="calculateSavingGoal()" placeholder="例如：80000"
+                                    class="flex-1 text-lg font-bold text-champagne-600 font-mono bg-transparent outline-none w-full">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1.5">目前已存入金额 Saved</label>
+                            <div class="flex items-center gap-1 border-b border-gray-200 focus-within:border-burgundy-500 pb-1">
+                                <span class="text-xs text-gray-400 font-bold">RM</span>
+                                <input type="number" id="saving-saved-input" oninput="calculateSavingGoal()" placeholder="例如：25000"
+                                    class="flex-1 text-lg font-bold text-green-600 font-mono bg-transparent outline-none w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar + milestone labels -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-[10px] text-gray-400 font-bold">存款进度</span>
+                            <span id="saving-pct-label" class="text-[10px] font-bold text-champagne-600">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                            <div id="saving-bar" class="h-3 rounded-full transition-all duration-500 bg-gradient-to-r from-champagne-500 to-green-400" style="width:0%"></div>
+                        </div>
+                        <!-- Milestone ticks -->
+                        <div class="flex justify-between mt-1 px-0.5">
+                            <span class="text-[9px] text-gray-300">0%</span>
+                            <span class="text-[9px] text-gray-300">25%</span>
+                            <span class="text-[9px] text-gray-300">50%</span>
+                            <span class="text-[9px] text-gray-300">75%</span>
+                            <span class="text-[9px] text-gray-300">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Status message -->
+                    <div id="saving-status-msg" class="hidden text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed"></div>
+                </div>
+
+                <!-- Right: SVG donut ring -->
+                <div class="flex flex-col items-center justify-center gap-2 min-w-[130px]">
+                    <svg viewBox="0 0 120 120" class="w-28 h-28 -rotate-90">
+                        <!-- Track -->
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="12"/>
+                        <!-- Progress arc -->
+                        <circle id="saving-ring" cx="60" cy="60" r="50" fill="none"
+                            stroke="#c5a059" stroke-width="12"
+                            stroke-linecap="round"
+                            stroke-dasharray="314"
+                            stroke-dashoffset="314"
+                            style="transition: stroke-dashoffset 0.6s ease"/>
+                    </svg>
+                    <div class="text-center -mt-1">
+                        <div id="saving-ring-pct" class="text-xl font-bold font-mono text-champagne-600">0%</div>
+                        <div class="text-[10px] text-gray-400 font-semibold">存款完成率</div>
+                    </div>
+                    <div class="text-center mt-1 bg-gray-50 rounded-xl px-3 py-2 border border-gray-100 w-full">
+                        <div class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">距离目标还差</div>
+                        <div id="saving-gap" class="text-sm font-bold font-mono text-burgundy-500 mt-0.5">RM —</div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="bg-white rounded-2xl p-6 elegant-shadow border border-gray-100 mb-8">
@@ -419,58 +512,7 @@
     </div>
 
     <!-- ── VENDORS ── -->
-    <div id="content-vendors" class="tab-content hidden animate-fade">
-        <div class="bg-white rounded-2xl p-6 elegant-shadow border border-burgundy-50 mb-8">
-            <h2 class="text-xl font-bold font-serif text-burgundy-500 mb-2">📍 大马优质 Vendor 联络广场</h2>
-            <p class="text-xs text-gray-400 mb-6">内置吉隆坡、雪兰莪等本地高口碑商家，点击可自动组装询问模板并一键跳转询问。</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="border border-gray-100 rounded-2xl p-4 hover:border-burgundy-500/30 transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-burgundy-50 text-burgundy-600 text-[10px] px-2 py-1 rounded font-bold">平面摄影 (Photographer)</span>
-                            <span class="text-xs text-yellow-500 font-bold"><i class="fa-solid fa-star"></i> 4.9</span>
-                        </div>
-                        <h4 class="font-bold text-sm text-gray-800">Mocha Studio KL</h4>
-                        <p class="text-[11px] text-gray-400 mt-1">吉隆坡电影氛围感顶尖工作室，擅长抓拍暖光下极富张力的新人对视瞬间。</p>
-                        <p class="text-xs text-burgundy-600 font-mono font-bold mt-2">价格档次：RM 3,000 - RM 6,000</p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-gray-100">
-                        <button onclick="sendWhatsAppInquiry('Mocha Studio KL','60123456789')" class="w-full bg-green-500 hover:bg-green-600 text-white text-[10px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp 询价</button>
-                    </div>
-                </div>
-                <div class="border border-gray-100 rounded-2xl p-4 hover:border-burgundy-500/30 transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-champagne-100 text-champagne-600 text-[10px] px-2 py-1 rounded font-bold">婚礼跟妆 (MUA)</span>
-                            <span class="text-xs text-yellow-500 font-bold"><i class="fa-solid fa-star"></i> 5.0</span>
-                        </div>
-                        <h4 class="font-bold text-sm text-gray-800">Evelyn Makeup Artistry</h4>
-                        <p class="text-[11px] text-gray-400 mt-1">擅长法式轻复古与新娘干净清透缎面妆，眼妆尤为精致。</p>
-                        <p class="text-xs text-burgundy-600 font-mono font-bold mt-2">价格档次：RM 1,800 - RM 3,500</p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-gray-100">
-                        <button onclick="sendWhatsAppInquiry('Evelyn Makeup Artistry','60123456789')" class="w-full bg-green-500 hover:bg-green-600 text-white text-[10px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp 询价</button>
-                    </div>
-                </div>
-                <div class="border border-gray-100 rounded-2xl p-4 hover:border-burgundy-500/30 transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="bg-gray-100 text-gray-600 text-[10px] px-2 py-1 rounded font-bold">宴席场地 (Venue)</span>
-                            <span class="text-xs text-yellow-500 font-bold"><i class="fa-solid fa-star"></i> 4.8</span>
-                        </div>
-                        <h4 class="font-bold text-sm text-gray-800">The Glasshouse Seputeh</h4>
-                        <p class="text-[11px] text-gray-400 mt-1">吉隆坡知名全透明玻璃温室，阳光透过绿植倾洒，浪漫梦幻代名词。</p>
-                        <p class="text-xs text-burgundy-600 font-mono font-bold mt-2">价格档次：RM 15,000 - RM 30,000</p>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-gray-100">
-                        <button onclick="sendWhatsAppInquiry('The Glasshouse Seputeh','60123456789')" class="w-full bg-green-500 hover:bg-green-600 text-white text-[10px] font-bold py-2 rounded-lg transition flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp 询价</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── GUESTS ── -->
+<!-- ── GUESTS ── -->
     <div id="content-guests" class="tab-content hidden animate-fade">
         <div class="bg-[#faf3eb] rounded-2xl p-6 mb-6 border border-champagne-100 print-card flex flex-wrap justify-between items-center gap-4">
             <div>
@@ -612,40 +654,6 @@
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         ★ NEW TAB: 团队 & 联络手册 (Bridal Party + Contacts)
-    ═══════════════════════════════════════════════════════════ -->
-    <div id="content-party" class="tab-content hidden animate-fade">
-
-        <!-- ── Bridal Party Section ── -->
-        <div class="bg-gradient-to-r from-burgundy-50 to-champagne-100/30 rounded-2xl p-6 mb-6 border border-burgundy-100 flex flex-wrap justify-between items-center gap-4">
-            <div>
-                <h2 class="text-xl font-bold font-serif text-burgundy-500 mb-1">💍 伴郎伴娘团队名单</h2>
-                <p class="text-xs text-gray-500 leading-relaxed">记录伴郎 (Groomsmen)、伴娘 (Bridesmaids) 的基本资料、联络号码及负责事项，婚礼当天一目了然。</p>
-            </div>
-            <button onclick="addPartyMember()" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm transition duration-200">➕ 新增团队成员</button>
-        </div>
-
-        <div id="party-members-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"></div>
-
-        <!-- ── Vendor / Contacts Directory ── -->
-        <div class="bg-gradient-to-r from-champagne-100/40 to-gray-50 rounded-2xl p-6 mb-6 border border-champagne-100 flex flex-wrap justify-between items-center gap-4">
-            <div>
-                <h2 class="text-xl font-bold font-serif text-burgundy-500 mb-1">📞 婚礼重要联络人手册</h2>
-                <p class="text-xs text-gray-500 leading-relaxed">所有婚礼服务商、场地负责人、化妆师、摄影师等核心联络方式集中存档，婚礼当天快速拨号不慌乱。</p>
-            </div>
-            <div class="flex gap-2 flex-wrap">
-                <button onclick="addContact('venue')" class="bg-champagne-500 hover:bg-champagne-600 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-sm transition duration-200">🏛️ 新增场地</button>
-                <button onclick="addContact('photo')" class="bg-burgundy-500 hover:bg-burgundy-600 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-sm transition duration-200">📷 新增摄影师</button>
-                <button onclick="addContact('mua')" class="bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-sm transition duration-200">💄 新增化妆师</button>
-                <button onclick="addContact('other')" class="bg-gray-500 hover:bg-gray-600 text-white text-xs font-semibold py-2.5 px-3 rounded-xl shadow-sm transition duration-200">➕ 其他联络人</button>
-            </div>
-        </div>
-
-        <div id="contacts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8"></div>
-
-    </div>
-
     <!-- ── AI ASSISTANT ── -->
     <div id="content-ai-assistant" class="tab-content hidden animate-fade">
         <div class="bg-gradient-to-r from-burgundy-50 to-champagne-100/30 rounded-2xl p-6 mb-8 border border-burgundy-100 print-card flex items-center gap-4">
@@ -746,8 +754,6 @@ let aiClipboardCache = '';
 let lastGeneratedGames = null;
 
 // ★ NEW STATE
-let partyMembers = [];   // { id, role, name, phone, remark }
-let contacts = [];       // { id, category, name, phone, remark, company }
 
 let carouselPhotos = [
     "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600",
@@ -811,8 +817,6 @@ window.onload = function() {
     onDateChanged();
     renderWishesOnMockBoard();
     renderAllCustomTimelineActs();
-    renderPartyMembers();
-    renderContacts();
     // Route check
     const params = new URLSearchParams(window.location.search);
     if (params.get('view') === 'guest') openGuestMode(true);
@@ -873,17 +877,78 @@ function closeGuestMode() {
     document.body.style.overflow = '';
 }
 
+// ── Guest Mode Carousel (full: auto-advance, dots, arrows) ──
+let goCarouselIndex = 0;
+let goCarouselTimer = null;
+
 function renderGuestOverlayCarousel() {
-    const c = document.getElementById('go-carousel');
+    goCarouselIndex = 0;
+    const c   = document.getElementById('go-carousel');
+    const dot = document.getElementById('go-carousel-dots');
     if (!c) return;
-    c.innerHTML = '';
-    carouselPhotos.forEach(p => {
-        const d = document.createElement('div');
-        d.className = 'w-full h-full flex-shrink-0';
-        d.innerHTML = `<img src="${p}" class="w-full h-full object-cover">`;
-        c.appendChild(d);
+
+    c.innerHTML   = '';
+    if (dot) dot.innerHTML = '';
+
+    const photos = carouselPhotos.length > 0 ? carouselPhotos : [
+        'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800'
+    ];
+
+    photos.forEach((p, idx) => {
+        // slide
+        const slide = document.createElement('div');
+        slide.className = 'w-full h-full flex-shrink-0 relative';
+        slide.innerHTML = `<img src="${p}" class="w-full h-full object-cover">`;
+        c.appendChild(slide);
+
+        // dot
+        if (dot) {
+            const d = document.createElement('span');
+            d.id        = `go-dot-${idx}`;
+            d.className = `block rounded-full bg-white transition-all duration-300 ${idx === 0 ? 'w-5 h-2 opacity-100' : 'w-2 h-2 opacity-50'}`;
+            dot.appendChild(d);
+        }
     });
-    c.style.transform = 'translateX(0)';
+
+    goCarouselMoveTo(0);
+
+    // auto-advance every 3 s
+    if (goCarouselTimer) clearInterval(goCarouselTimer);
+    goCarouselTimer = setInterval(() => {
+        goCarouselIndex = (goCarouselIndex + 1) % photos.length;
+        goCarouselMoveTo(goCarouselIndex);
+    }, 3000);
+}
+
+function goCarouselMoveTo(idx) {
+    const c     = document.getElementById('go-carousel');
+    const total = carouselPhotos.length || 1;
+    if (c) c.style.transform = `translateX(-${idx * 100}%)`;
+
+    // update dots
+    for (let i = 0; i < total; i++) {
+        const d = document.getElementById(`go-dot-${i}`);
+        if (!d) continue;
+        if (i === idx) {
+            d.className = 'block rounded-full bg-white transition-all duration-300 w-5 h-2 opacity-100';
+        } else {
+            d.className = 'block rounded-full bg-white transition-all duration-300 w-2 h-2 opacity-50';
+        }
+    }
+    goCarouselIndex = idx;
+}
+
+function goCarouselNext() {
+    const total = carouselPhotos.length || 1;
+    goCarouselMoveTo((goCarouselIndex + 1) % total);
+    // reset auto timer
+    if (goCarouselTimer) { clearInterval(goCarouselTimer); goCarouselTimer = setInterval(() => goCarouselNext(), 3000); }
+}
+
+function goCarouselPrev() {
+    const total = carouselPhotos.length || 1;
+    goCarouselMoveTo((goCarouselIndex - 1 + total) % total);
+    if (goCarouselTimer) { clearInterval(goCarouselTimer); goCarouselTimer = setInterval(() => goCarouselNext(), 3000); }
 }
 
 function updateGuestOverlayCountdown() {
@@ -942,195 +1007,6 @@ function resetGuestForm() {
     document.getElementById('go-pax').value = '1';
     document.getElementById('go-diet').value = 'none';
     document.getElementById('go-wish').value = '';
-}
-
-// ═══════════════════════════════════════
-// ★ BRIDAL PARTY
-// ═══════════════════════════════════════
-const ROLE_CONFIG = {
-    groom:    { label:'新郎 Groom',       badge:'badge-groom',    icon:'👨‍💼', color:'text-blue-700' },
-    bride:    { label:'新娘 Bride',        badge:'badge-bride',    icon:'👰',   color:'text-pink-700' },
-    bestman:  { label:'伴郎 Groomsman',   badge:'badge-best-man', icon:'🤵',   color:'text-purple-700' },
-    maid:     { label:'伴娘 Bridesmaid',  badge:'badge-maid',     icon:'💃',   color:'text-burgundy-600' },
-    other:    { label:'其他',              badge:'bg-gray-100 text-gray-600', icon:'👤', color:'text-gray-600' }
-};
-
-function addPartyMember(role = 'bestman') {
-    partyMembers.push({
-        id: 'pm_' + Date.now(),
-        role, name: '', phone: '', remark: ''
-    });
-    renderPartyMembers();
-    saveAllToLocalStorage();
-}
-
-function renderPartyMembers() {
-    const grid = document.getElementById('party-members-grid');
-    if (!grid) return;
-    if (partyMembers.length === 0) {
-        grid.innerHTML = `
-            <div class="col-span-3 text-center py-10 border-2 border-dashed border-burgundy-100 rounded-2xl text-gray-300">
-                <div class="text-4xl mb-2">💍</div>
-                <p class="text-xs font-semibold">暂无团队成员，点击上方按钮开始新增伴郎伴娘资料</p>
-            </div>`;
-        return;
-    }
-    grid.innerHTML = '';
-    partyMembers.forEach(pm => {
-        const cfg = ROLE_CONFIG[pm.role] || ROLE_CONFIG.other;
-        grid.insertAdjacentHTML('beforeend', `
-            <div class="bg-white rounded-2xl p-5 elegant-shadow border border-gray-100 flex flex-col gap-3 relative group">
-                <!-- Delete -->
-                <button onclick="deletePartyMember('${pm.id}')" class="absolute top-3 right-3 text-gray-200 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-                <!-- Role selector -->
-                <div class="flex items-center gap-2">
-                    <span class="text-xl">${cfg.icon}</span>
-                    <select onchange="updatePartyMember('${pm.id}','role',this.value)" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:border-burgundy-500 ${cfg.color}">
-                        ${Object.entries(ROLE_CONFIG).map(([k,v]) => `<option value="${k}" ${pm.role===k?'selected':''}>${v.label}</option>`).join('')}
-                    </select>
-                </div>
-                <!-- Name -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">姓名 Name</label>
-                    <input type="text" value="${pm.name}" oninput="updatePartyMember('${pm.id}','name',this.value)"
-                        class="w-full text-sm font-bold text-gray-800 bg-transparent border-b border-gray-100 hover:border-gray-200 focus:border-burgundy-500 focus:outline-none py-1"
-                        placeholder="例如：陈志远">
-                </div>
-                <!-- Phone -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">联络号码 Phone</label>
-                    <div class="flex items-center gap-2">
-                        <input type="tel" value="${pm.phone}" oninput="updatePartyMember('${pm.id}','phone',this.value)"
-                            class="flex-1 text-xs text-gray-700 bg-transparent border-b border-gray-100 hover:border-gray-200 focus:border-burgundy-500 focus:outline-none py-1 font-mono"
-                            placeholder="例如：01X-XXXXXXX">
-                        ${pm.phone ? `<a href="https://api.whatsapp.com/send?phone=6${pm.phone.replace(/^0/,'').replace(/[-\s]/g,'')}" target="_blank" class="text-green-500 hover:text-green-600 text-sm transition"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
-                        ${pm.phone ? `<a href="tel:${pm.phone}" class="text-blue-500 hover:text-blue-600 text-sm transition"><i class="fa-solid fa-phone"></i></a>` : ''}
-                    </div>
-                </div>
-                <!-- Remark / Responsibility -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">备注 / 负责事项 Remark</label>
-                    <textarea oninput="updatePartyMember('${pm.id}','remark',this.value)"
-                        class="w-full text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-2 focus:border-burgundy-500 focus:outline-none resize-none h-14"
-                        placeholder="例如：负责接亲游戏道具、管理利是箱、照顾新娘...">${pm.remark}</textarea>
-                </div>
-            </div>
-        `);
-    });
-}
-
-function updatePartyMember(id, field, value) {
-    const pm = partyMembers.find(p => p.id === id);
-    if (pm) { pm[field] = value; if(field==='role'||field==='phone') renderPartyMembers(); saveAllToLocalStorage(); }
-}
-
-function deletePartyMember(id) {
-    partyMembers = partyMembers.filter(p => p.id !== id);
-    renderPartyMembers();
-    saveAllToLocalStorage();
-}
-
-// ═══════════════════════════════════════
-// ★ CONTACTS DIRECTORY
-// ═══════════════════════════════════════
-const CONTACT_CATEGORY = {
-    venue:  { label:'🏛️ 宴席场地',   color:'bg-champagne-100 text-champagne-600' },
-    photo:  { label:'📷 摄影摄像',   color:'bg-blue-50 text-blue-600' },
-    mua:    { label:'💄 化妆造型',   color:'bg-pink-50 text-pink-600' },
-    florist:{ label:'🌸 花艺布置',   color:'bg-green-50 text-green-700' },
-    cake:   { label:'🎂 婚礼蛋糕',   color:'bg-yellow-50 text-yellow-700' },
-    emcee:  { label:'🎤 婚礼司仪',   color:'bg-purple-50 text-purple-600' },
-    band:   { label:'🎵 乐队音响',   color:'bg-indigo-50 text-indigo-600' },
-    video:  { label:'🎬 录像剪辑',   color:'bg-orange-50 text-orange-600' },
-    other:  { label:'📌 其他联络',   color:'bg-gray-100 text-gray-600' }
-};
-
-function addContact(category = 'other') {
-    contacts.push({
-        id: 'ct_' + Date.now(),
-        category, name: '', company: '', phone: '', remark: ''
-    });
-    renderContacts();
-    saveAllToLocalStorage();
-}
-
-function renderContacts() {
-    const grid = document.getElementById('contacts-grid');
-    if (!grid) return;
-    if (contacts.length === 0) {
-        grid.innerHTML = `
-            <div class="col-span-2 text-center py-10 border-2 border-dashed border-champagne-100 rounded-2xl text-gray-300">
-                <div class="text-4xl mb-2">📞</div>
-                <p class="text-xs font-semibold">暂无联络人，点击上方按钮新增婚礼服务商联络方式</p>
-            </div>`;
-        return;
-    }
-    grid.innerHTML = '';
-    contacts.forEach(ct => {
-        const cat = CONTACT_CATEGORY[ct.category] || CONTACT_CATEGORY.other;
-        grid.insertAdjacentHTML('beforeend', `
-            <div class="bg-white rounded-2xl p-5 elegant-shadow border border-gray-100 flex flex-col gap-3 relative group">
-                <!-- Delete -->
-                <button onclick="deleteContact('${ct.id}')" class="absolute top-3 right-3 text-gray-200 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-                <!-- Category + Name row -->
-                <div class="flex items-start gap-3">
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2 flex-wrap">
-                            <select onchange="updateContact('${ct.id}','category',this.value)" class="text-[10px] font-bold px-2 py-1 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:border-burgundy-500">
-                                ${Object.entries(CONTACT_CATEGORY).map(([k,v]) => `<option value="${k}" ${ct.category===k?'selected':''}>${v.label}</option>`).join('')}
-                            </select>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${cat.color}">${cat.label}</span>
-                        </div>
-                        <input type="text" value="${ct.name}" oninput="updateContact('${ct.id}','name',this.value)"
-                            class="w-full text-sm font-bold text-gray-800 bg-transparent border-b border-gray-100 hover:border-gray-200 focus:border-burgundy-500 focus:outline-none py-1"
-                            placeholder="负责人姓名">
-                    </div>
-                </div>
-                <!-- Company -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">公司 / 品牌名称 Company</label>
-                    <input type="text" value="${ct.company}" oninput="updateContact('${ct.id}','company',this.value)"
-                        class="w-full text-xs text-gray-600 bg-transparent border-b border-gray-100 hover:border-gray-200 focus:border-burgundy-500 focus:outline-none py-1"
-                        placeholder="例如：Mocha Studio KL">
-                </div>
-                <!-- Phone + Quick Actions -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">联络号码 Phone</label>
-                    <div class="flex items-center gap-2">
-                        <input type="tel" value="${ct.phone}" oninput="updateContact('${ct.id}','phone',this.value)"
-                            class="flex-1 text-xs text-gray-700 bg-transparent border-b border-gray-100 hover:border-gray-200 focus:border-burgundy-500 focus:outline-none py-1 font-mono"
-                            placeholder="例如：03-XXXX XXXX 或 01X-XXXXXXX">
-                        ${ct.phone ? `
-                        <a href="tel:${ct.phone}" class="bg-blue-50 hover:bg-blue-100 text-blue-600 text-[10px] font-bold px-2 py-1 rounded-lg transition flex items-center gap-1"><i class="fa-solid fa-phone"></i> 拨号</a>
-                        <a href="https://api.whatsapp.com/send?phone=6${ct.phone.replace(/^0/,'').replace(/[-\s]/g,'')}&text=${encodeURIComponent('您好，我们是婚礼新人，想咨询您的服务档期及报价，谢谢！')}" target="_blank" class="bg-green-50 hover:bg-green-100 text-green-600 text-[10px] font-bold px-2 py-1 rounded-lg transition flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> WA</a>
-                        ` : ''}
-                    </div>
-                </div>
-                <!-- Remark -->
-                <div>
-                    <label class="text-[10px] text-gray-400 font-bold uppercase tracking-wider block mb-1">备注 Remark</label>
-                    <textarea oninput="updateContact('${ct.id}','remark',this.value)"
-                        class="w-full text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-2 focus:border-burgundy-500 focus:outline-none resize-none h-12"
-                        placeholder="例如：已付订金 RM 500，包含8小时拍摄+快剪SDE...">${ct.remark}</textarea>
-                </div>
-            </div>
-        `);
-    });
-}
-
-function updateContact(id, field, value) {
-    const ct = contacts.find(c => c.id === id);
-    if (ct) { ct[field] = value; if(field==='category'||field==='phone') renderContacts(); saveAllToLocalStorage(); }
-}
-
-function deleteContact(id) {
-    contacts = contacts.filter(c => c.id !== id);
-    renderContacts();
-    saveAllToLocalStorage();
 }
 
 // ═══════════════════════════════════════
@@ -1317,6 +1193,72 @@ function calculateBudgetNewSummary(){
     if(els.bar)els.bar.className=`bg-${color}-500 h-2.5 rounded-full transition-all duration-300`;
 }
 
+function calculateSavingGoal() {
+    const goalInput  = document.getElementById('saving-goal-input');
+    const savedInput = document.getElementById('saving-saved-input');
+    const bar        = document.getElementById('saving-bar');
+    const ring       = document.getElementById('saving-ring');
+    const pctLabel   = document.getElementById('saving-pct-label');
+    const ringPct    = document.getElementById('saving-ring-pct');
+    const gapEl      = document.getElementById('saving-gap');
+    const statusEl   = document.getElementById('saving-status-msg');
+
+    const goal  = parseFloat(goalInput?.value)  || 0;
+    const saved = parseFloat(savedInput?.value) || 0;
+
+    if (goal <= 0) {
+        // Reset all visuals
+        if (bar)      bar.style.width = '0%';
+        if (ring)     ring.style.strokeDashoffset = '314';
+        if (pctLabel) pctLabel.textContent = '0%';
+        if (ringPct)  ringPct.textContent  = '0%';
+        if (gapEl)    gapEl.textContent    = 'RM —';
+        if (statusEl) statusEl.classList.add('hidden');
+        saveAllToLocalStorage();
+        return;
+    }
+
+    const pct  = Math.min(Math.round((saved / goal) * 100), 100);
+    const gap  = Math.max(goal - saved, 0);
+
+    // Bar
+    if (bar) bar.style.width = `${pct}%`;
+
+    // Ring (circumference = 2π×50 ≈ 314)
+    if (ring) ring.style.strokeDashoffset = String(314 - (314 * pct / 100));
+
+    // Ring colour: green when done
+    if (ring) ring.style.stroke = pct >= 100 ? '#22c55e' : '#c5a059';
+
+    // Labels
+    if (pctLabel) pctLabel.textContent = `${pct}%`;
+    if (ringPct)  ringPct.textContent  = `${pct}%`;
+    if (gapEl)    gapEl.textContent    = pct >= 100 ? '🎉 目标达成！' : `RM ${gap.toLocaleString()}`;
+
+    // Status message
+    if (statusEl) {
+        statusEl.classList.remove('hidden');
+        if (pct >= 100) {
+            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-green-50 text-green-700 border border-green-200';
+            statusEl.innerHTML = '🎉 <strong>恭喜！婚礼存款目标已达成！</strong> 现在可以放心预订各项婚礼服务，梦想婚礼指日可待！';
+        } else if (pct >= 75) {
+            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-champagne-100 text-champagne-600 border border-champagne-100';
+            statusEl.innerHTML = `✨ <strong>冲刺阶段！</strong> 已存入 ${pct}%，距离目标还差 RM ${gap.toLocaleString()}，加油！`;
+        } else if (pct >= 50) {
+            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-blue-50 text-blue-700 border border-blue-100';
+            statusEl.innerHTML = `💪 <strong>过半了！</strong> 已达成 ${pct}%，继续保持每月定存的好习惯！`;
+        } else if (pct >= 25) {
+            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-purple-50 text-purple-700 border border-purple-100';
+            statusEl.innerHTML = `🌱 <strong>良好起步！</strong> 已存 ${pct}%，建议每月固定存入 RM ${Math.ceil(gap/12).toLocaleString()} 可在一年内达标。`;
+        } else {
+            statusEl.className = 'text-xs font-semibold rounded-xl px-4 py-2.5 leading-relaxed bg-gray-50 text-gray-600 border border-gray-200';
+            statusEl.innerHTML = `📌 <strong>刚刚起步！</strong> 已存 ${pct}%，婚礼基金已开始积累，坚持定存是关键！`;
+        }
+    }
+
+    saveAllToLocalStorage();
+}
+
 // ═══════════════════════════════════════
 // VENDOR QUOTES
 // ═══════════════════════════════════════
@@ -1478,9 +1420,9 @@ function saveAllToLocalStorage(){
         carouselPhotos,checklistItems,seatingData,todoItems,guestItems,
         budgetNewItems,quoteItems,likedInspirations,
         budgetTotalNew:document.getElementById('budget-total-new-input')?.value||'60000',
+        savingGoal:document.getElementById('saving-goal-input')?.value||'',
+        savingSaved:document.getElementById('saving-saved-input')?.value||'',
         runsheetItems,
-        partyMembers,   // ★ NEW
-        contacts        // ★ NEW
     };
     localStorage.setItem('wedding_v9_data',JSON.stringify(payload));
     const toast=document.getElementById('save-status-toast');if(toast){toast.classList.remove('hidden');setTimeout(()=>toast.classList.add('hidden'),1200);}
@@ -1496,15 +1438,6 @@ function loadAllFromLocalStorage(){
         quoteItems=[{id:'q1',vendor:'Mocha Studio 吉隆坡',price:4500,service:'双摄 包含早上接亲快剪 SDE',prosCons:'本地好评、交片迅速，档期需要提早约',rating:'🌟🌟🌟🌟🌟'}];
         checklistItems=JSON.parse(JSON.stringify(defaultChecklist));
         runsheetItems=JSON.parse(JSON.stringify(defaultRunsheetTemplates));
-        // ★ NEW defaults
-        partyMembers=[
-            {id:'pm_default1',role:'bestman',name:'',phone:'',remark:'负责接亲游戏道具及带领兄弟团'},
-            {id:'pm_default2',role:'maid',name:'',phone:'',remark:'负责新娘礼服管理及姐妹团协调'}
-        ];
-        contacts=[
-            {id:'ct_default1',category:'venue',name:'',company:'',phone:'',remark:'已确认日期，待支付尾款'},
-            {id:'ct_default2',category:'photo',name:'',company:'',phone:'',remark:'包含婚纱拍摄 + 接亲 SDE'}
-        ];
         renderSeatingTables();
         return;
     }
@@ -1521,12 +1454,13 @@ function loadAllFromLocalStorage(){
         guestItems=data.guestItems&&data.guestItems.length>0?data.guestItems:[];
         budgetNewItems=data.budgetNewItems&&data.budgetNewItems.length>0?data.budgetNewItems:[];
         if(data.budgetTotalNew&&document.getElementById('budget-total-new-input'))document.getElementById('budget-total-new-input').value=data.budgetTotalNew;
+        if(data.savingGoal&&document.getElementById('saving-goal-input'))document.getElementById('saving-goal-input').value=data.savingGoal;
+        if(data.savingSaved&&document.getElementById('saving-saved-input'))document.getElementById('saving-saved-input').value=data.savingSaved;
+        calculateSavingGoal();
         quoteItems=data.quoteItems&&data.quoteItems.length>0?data.quoteItems:[];
         likedInspirations=data.likedInspirations||[];
         runsheetItems=data.runsheetItems&&data.runsheetItems.length>0?data.runsheetItems:JSON.parse(JSON.stringify(defaultRunsheetTemplates));
         // ★ NEW
-        partyMembers=data.partyMembers&&data.partyMembers.length>0?data.partyMembers:[];
-        contacts=data.contacts&&data.contacts.length>0?data.contacts:[];
     }catch(e){console.error("Failed to load: ",e);}
 }
 
